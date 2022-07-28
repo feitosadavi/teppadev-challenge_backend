@@ -65,4 +65,14 @@ describe('SignupController', () => {
         body: { accessToken: 'any_access_token' }
       })
   })
+
+  it('should return 500 on error', async () => {
+    fakeCreateAccount.execute.mockRejectedValueOnce(new Error())
+    const response = await sut.handle(fakeRequest)
+    expect(response)
+      .toEqual({
+        statusCode: 500,
+        body: new Error()
+      })
+  })
 })
