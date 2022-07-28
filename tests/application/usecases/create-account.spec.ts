@@ -4,24 +4,37 @@ import { CreateAccount } from '@/application/usecases'
 import {
   ICreateAccount,
   ICreateAccountRepository,
+  ILoadAccountByEmailRepository
 } from '@/application/protocols'
 
-const makefakeCreateAccountInput = (): ICreateAccount.Input => ({
+const makeFakeCreateAccountInput = (): ICreateAccount.Input => ({
   email: 'any@email.com',
   password: 'any_password'
 })
 
 describe('CreateAccount', () => {
   let sut: CreateAccount
+  let fakeLoadAccountByEmailRepository: MockProxy<ILoadAccountByEmailRepository>
   let fakeCreateAccountRepository: MockProxy<ICreateAccountRepository>
   let fakeCreateAccountInput: ICreateAccount.Input
 
   beforeAll(() => {
+    fakeLoadAccountByEmailRepository = mock()
     fakeCreateAccountRepository = mock()
-    fakeCreateAccountInput = makefakeCreateAccountInput()
+    fakeCreateAccountInput = makeFakeCreateAccountInput()
   })
   beforeEach(() => {
-    sut = new CreateAccount(fakeCreateAccountRepository)
+    sut = new CreateAccount(
+      fakeLoadAccountByEmailRepository,
+      fakeCreateAccountRepository
+    )
+  })
+
+  it('should call loadAccountByEmailRepository with correct input', async () => {
+    await sut.execute(fakeCreateAccountInput)
+    const { email } = fakeCreateAccountInput
+    expect(fakeLoadAccountByEmailRepository.loadByEmail)
+      .toHaveBeenCalledWith({ email })
   })
 
   it('should call createAccountRepository with correct input', async () => {
