@@ -41,7 +41,7 @@ describe('CreateAccount', () => {
     fakeHasher.hash.mockResolvedValue('hashed_password')
 
     fakeAuthenticator = mock()
-    fakeAuthenticator.authenticate.mockResolvedValue({ accessToken: 'any_access_token' })
+    fakeAuthenticator.authenticate.mockResolvedValue('any_access_token')
 
     fakeCreateAccountInput = makeFakeCreateAccountInput()
     fakeAccount = makeFakeAccount()
@@ -85,5 +85,10 @@ describe('CreateAccount', () => {
     await sut.execute(fakeCreateAccountInput)
     expect(fakeAuthenticator.authenticate)
       .toHaveBeenCalledWith(fakeCreateAccountInput)
+  })
+
+  it('should return an accessToken on success', async () => {
+    const account = await sut.execute(fakeCreateAccountInput)
+    expect(account).toEqual({ accessToken: 'any_access_token' })
   })
 })
