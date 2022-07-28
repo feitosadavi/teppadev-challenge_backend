@@ -60,16 +60,16 @@ describe('CreateAccount', () => {
     expect(account).toBeNull()
   })
 
-  it('should call createAccountRepository with correct input', async () => {
-    await sut.execute(fakeCreateAccountInput)
-
-    expect(fakeCreateAccountRepository.create)
-      .toHaveBeenCalledWith(fakeCreateAccountInput)
-  })
-
   it('should call hasher with correct input', async () => {
     await sut.execute(fakeCreateAccountInput)
     expect(fakeHasher.hash)
       .toHaveBeenCalledWith(fakeAccount.password)
+  })
+
+  it('should call createAccountRepository with correct input', async () => {
+    await sut.execute(fakeCreateAccountInput)
+    const { email } = fakeCreateAccountInput
+    expect(fakeCreateAccountRepository.create)
+      .toHaveBeenCalledWith({ email, password: 'hashed_password' })
   })
 })
