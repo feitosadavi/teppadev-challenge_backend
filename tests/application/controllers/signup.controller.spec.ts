@@ -56,4 +56,13 @@ describe('SignupController', () => {
     expect(fakeCreateRestaurant.execute)
       .toHaveBeenCalledWith(fakeRequest.restaurantInput)
   })
+
+  it('should return 200 on success', async () => {
+    const response = await sut.handle(fakeRequest)
+    expect(response)
+      .toEqual({
+        statusCode: 200,
+        body: { accessToken: 'any_access_token' }
+      })
+  })
 })
