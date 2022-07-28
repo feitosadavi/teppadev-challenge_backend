@@ -49,4 +49,11 @@ describe('SignupController', () => {
         body: 'O email inserido já está em uso'
       })
   })
+
+  it('should call createRestaurant with correct input', async () => {
+    await sut.handle(fakeRequest)
+
+    expect(fakeCreateRestaurant.execute)
+      .toHaveBeenCalledWith(fakeRequest.restaurantInput)
+  })
 })
