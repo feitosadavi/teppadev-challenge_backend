@@ -5,7 +5,8 @@ import {
   ICreateAccount,
   ICreateAccountRepository,
   ILoadAccountByEmailRepository,
-  Hasher
+  Hasher,
+  IAuthenticator
 } from '@/application/protocols'
 import { Account } from '@/domain/entities'
 
@@ -25,6 +26,7 @@ describe('CreateAccount', () => {
   let fakeLoadAccountByEmailRepository: MockProxy<ILoadAccountByEmailRepository>
   let fakeHasher: MockProxy<Hasher>
   let fakeCreateAccountRepository: MockProxy<ICreateAccountRepository>
+  let fakeAuthenticator: MockProxy<IAuthenticator>
 
   let fakeCreateAccountInput: ICreateAccount.Input
   let fakeAccount: Account
@@ -32,9 +34,14 @@ describe('CreateAccount', () => {
   beforeAll(() => {
     fakeLoadAccountByEmailRepository = mock()
     fakeLoadAccountByEmailRepository.loadByEmail.mockResolvedValue(null)
+
     fakeCreateAccountRepository = mock()
+
     fakeHasher = mock()
     fakeHasher.hash.mockResolvedValue('hashed_password')
+
+    fakeAuthenticator = mock()
+    fakeAuthenticator.authenticate.mockResolvedValue({ accessToken: 'any_access_token' })
 
     fakeCreateAccountInput = makeFakeCreateAccountInput()
     fakeAccount = makeFakeAccount()
@@ -43,7 +50,8 @@ describe('CreateAccount', () => {
     sut = new CreateAccount(
       fakeLoadAccountByEmailRepository,
       fakeHasher,
-      fakeCreateAccountRepository
+      fakeCreateAccountRepository,
+      fakeAuthenticator
     )
   })
 
@@ -71,5 +79,11 @@ describe('CreateAccount', () => {
     const { email } = fakeCreateAccountInput
     expect(fakeCreateAccountRepository.create)
       .toHaveBeenCalledWith({ email, password: 'hashed_password' })
+  })
+
+  it('should call authenticator with correct input', async () => {
+    await sut.execute(fakeCreateAccountInput)
+    expect(fakeAuthenticator.authenticate)
+      .toHaveBeenCalledWith(fakeCreateAccountInput)
   })
 })
