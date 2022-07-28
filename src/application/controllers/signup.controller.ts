@@ -15,7 +15,10 @@ export class SignupController implements Controller<SignupController.Request, Si
     const accessToken = await this.createAccount.execute(accountInput)
     if (!accessToken) return { statusCode: 400, body: 'O email inserido já está em uso' }
     await this.createRestaurant.execute(restaurantInput)
-    return
+    return {
+      statusCode: 200,
+      body: accessToken
+    }
   }
 }
 
