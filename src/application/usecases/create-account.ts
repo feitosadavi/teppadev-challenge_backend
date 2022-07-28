@@ -1,15 +1,18 @@
 import {
   ICreateAccount,
+  ILoadAccountByEmailRepository,
   ICreateAccountRepository,
 } from '@/application/protocols'
 
 export class CreateAccount implements ICreateAccount {
   constructor(
+    private readonly loadAccountByEmailRepository: ILoadAccountByEmailRepository,
     private readonly createAccountRepository: ICreateAccountRepository,
   ) { }
 
-  async execute (input: ICreateAccount.Input): Promise<ICreateAccount.Output> {
-    this.createAccountRepository.create(input)
+  async execute ({ email, password }: ICreateAccount.Input): Promise<ICreateAccount.Output> {
+    await this.loadAccountByEmailRepository.loadByEmail({ email })
+    await this.createAccountRepository.create({ email, password })
     return
   }
 }
