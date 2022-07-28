@@ -10,9 +10,9 @@ export class CreateAccount implements ICreateAccount {
     private readonly createAccountRepository: ICreateAccountRepository,
   ) { }
 
-  async execute ({ email, password }: ICreateAccount.Input): Promise<ICreateAccount.Output> {
-    await this.loadAccountByEmailRepository.loadByEmail({ email })
+  async execute ({ email, password }: ICreateAccount.Input): Promise<ICreateAccount.Output | null> {
+    const account = await this.loadAccountByEmailRepository.loadByEmail({ email })
+    if (account) return null
     await this.createAccountRepository.create({ email, password })
-    return
   }
 }
