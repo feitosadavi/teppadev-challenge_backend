@@ -7,11 +7,14 @@ import {
 
 export class SignupController implements Controller<SignupController.Request, SignupController.Reponse> {
   constructor(
-    private readonly createAccount: ICreateAccount
+    private readonly createAccount: ICreateAccount,
+    private readonly createRestaurant: ICreateRestaurant
   ) { }
 
-  handle ({ accountInput }: SignupController.Request): Promise<HttpResponse<SignupController.Reponse>> {
-    this.createAccount.execute(accountInput)
+  async handle ({ accountInput, restaurantInput }: SignupController.Request): Promise<HttpResponse<SignupController.Reponse>> {
+    const accessToken = await this.createAccount.execute(accountInput)
+    if (!accessToken) return { statusCode: 400, body: 'O email inserido já está em uso' }
+    // await this.createRestaurant.execute(restaurantInput)
     return
   }
 }
@@ -24,5 +27,5 @@ export namespace SignupController {
   export type Request = Data
   export type Reponse = {
     accessToken: string
-  }
+  } | string
 }
