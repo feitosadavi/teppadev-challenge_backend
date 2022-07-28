@@ -7,7 +7,5 @@ export namespace IAuthenticator {
     email: string
     password: string
   }
-  export type Output = {
-    accessToken: string
-  }
+  export type Output = string | null // accessToken
 }
