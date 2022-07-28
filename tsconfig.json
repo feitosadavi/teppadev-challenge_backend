@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es2019",
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // "strictPropertyInitialization": true,
+    // "strictNullChecks": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "rootDirs": [
+      "src",
+      "tests"
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@tests/*": [
+        "../tests/*"
+      ],
+      "@/*": [
+        "*"
+      ],
+      // "@app/*": [
+      //   "src/*"
+      // ]
+    }
+  },
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": []
+}
