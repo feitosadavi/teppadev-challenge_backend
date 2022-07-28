@@ -12,12 +12,19 @@ export class SignupController implements Controller<SignupController.Request, Si
   ) { }
 
   async handle ({ accountInput, restaurantInput }: SignupController.Request): Promise<HttpResponse<SignupController.Reponse>> {
-    const accessToken = await this.createAccount.execute(accountInput)
-    if (!accessToken) return { statusCode: 400, body: 'O email inserido já está em uso' }
-    await this.createRestaurant.execute(restaurantInput)
-    return {
-      statusCode: 200,
-      body: accessToken
+    try {
+      const accessToken = await this.createAccount.execute(accountInput)
+      if (!accessToken) return { statusCode: 400, body: 'O email inserido já está em uso' }
+      await this.createRestaurant.execute(restaurantInput)
+      return {
+        statusCode: 200,
+        body: accessToken
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: error
+      }
     }
   }
 }
