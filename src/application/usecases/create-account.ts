@@ -15,7 +15,7 @@ export class CreateAccount implements ICreateAccount {
   async execute ({ email, password }: ICreateAccount.Input): Promise<ICreateAccount.Output | null> {
     const account = await this.loadAccountByEmailRepository.loadByEmail({ email })
     if (account) return null
-    this.hasher.hash(password);
-    await this.createAccountRepository.create({ email, password })
+    const hashedPassword = await this.hasher.hash(password);
+    await this.createAccountRepository.create({ email, password: hashedPassword })
   }
 }
