@@ -3,9 +3,11 @@ import { MockProxy, mock } from 'jest-mock-extended'
 import {
   ISignup,
   ICreateAccount,
-  ICreateRestaurant
+  ICreateRestaurant,
+  ILoadAccountByEmail
 } from '@/application/protocols'
 import { SignupController } from '@/application/controllers'
+import { Account } from '@/domain/entities'
 
 const makeFakeRequest = (): ISignup.Input => ({
   accountInput: {
@@ -17,20 +19,38 @@ const makeFakeRequest = (): ISignup.Input => ({
   }
 })
 
+const makeFakeAccount = (): Account => ({
+  id: 'any_id',
+  email: 'any_email',
+  password: 'hashed_password'
+})
+
 describe('SignupController', () => {
   let sut: SignupController
+
+  let fakeLoadAccountByEmail: MockProxy<ILoadAccountByEmail>
   let fakeCreateAccount: MockProxy<ICreateAccount>
   let fakeCreateRestaurant: MockProxy<ICreateRestaurant>
+
   let fakeRequest: ISignup.Input
 
   beforeAll(() => {
+    fakeLoadAccountByEmail = mock()
+    fakeLoadAccountByEmail.execute.mockResolvedValue(null)
+
     fakeCreateAccount = mock()
     fakeCreateAccount.execute.mockReturnValue(Promise.resolve({ accessToken: 'any_access_token' }))
+
     fakeCreateRestaurant = mock()
+
     fakeRequest = makeFakeRequest()
   })
   beforeEach(() => {
-    sut = new SignupController(fakeCreateAccount, fakeCreateRestaurant)
+    sut = new SignupController(
+      fakeLoadAccountByEmail,
+      fakeCreateAccount,
+      fakeCreateRestaurant
+    )
   })
 
   it('should call createAccount with correct input', async () => {
@@ -40,8 +60,8 @@ describe('SignupController', () => {
       .toHaveBeenCalledWith(fakeRequest.accountInput)
   })
 
-  it('should return 400 if createAccount returns null', async () => {
-    fakeCreateAccount.execute.mockReturnValueOnce(null)
+  it('should return 400 if loadAccountByEmail returns null', async () => {
+    fakeLoadAccountByEmail.execute.mockReturnValueOnce(Promise.resolve(makeFakeAccount()))
     const response = await sut.handle(fakeRequest)
     expect(response)
       .toEqual({
