@@ -42,4 +42,10 @@ describe('CreateAccount', () => {
     expect(fakeLoadAccountByEmailRepository.loadByEmail)
       .toHaveBeenCalledWith({ email })
   })
+
+  it('should throw if loadAccountByEmailRepository thorws', async () => {
+    fakeLoadAccountByEmailRepository.loadByEmail.mockRejectedValueOnce(new Error())
+    const promise = sut.execute(fakeLoadAccountInput)
+    await expect(promise).rejects.toThrow()
+  })
 })
