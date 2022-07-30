@@ -1,3 +1,3 @@
-export * from './menu'
-export * from './account'
-export * from './restaurante'
+export * from './menu.entity'
+export * from './account.entity'
+export * from './restaurante.entity'
