@@ -20,18 +20,25 @@ describe('BcryptAdapter', () => {
 
   describe('hash', () => {
     let salt: number
+    let input: string
 
     beforeAll(() => {
       salt = 12
+      input = 'any_input'
 
       fakeBcrypt.hash.mockImplementation(() => 'any_hash')
     })
 
     it('should call hash with correct params', async () => {
-      let input = 'any_input'
       await sut.hash(input)
 
       expect(fakeBcrypt.hash).toHaveBeenCalledWith(input, salt)
+    })
+
+    it('should return a hash on success', async () => {
+      const hashedInput = await sut.hash(input)
+
+      expect(hashedInput).toBe('any_hash')
     })
   })
 })
