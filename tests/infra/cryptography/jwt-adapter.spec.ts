@@ -40,6 +40,14 @@ describe('JWTAdapter', () => {
 
       expect(generatedToken).toBe(token)
     })
+
+    it('should rethrow if sign throws', async () => {
+      fakeJwt.sign.mockImplementationOnce(() => { throw new Error('token_error') })
+
+      const promise = sut.generate({ key })
+
+      await expect(promise).rejects.toThrow(new Error('token_error'))
+    })
   })
 
   describe('validate', () => {
@@ -63,6 +71,14 @@ describe('JWTAdapter', () => {
       const returnedKey = await sut.validate({ token })
 
       expect(returnedKey).toBe(key)
+    })
+
+    it('should rethrow if verify returns null', async () => {
+      fakeJwt.verify.mockImplementationOnce(() => null)
+
+      const promise = sut.validate({ token })
+
+      await expect(promise).rejects.toThrow()
     })
   })
 })
