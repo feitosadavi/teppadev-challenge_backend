@@ -6,5 +6,5 @@ export interface ICreateAccountRepository {
 
 export namespace ICreateAccountRepository {
   export type Input = Omit<Account, 'id'>
-  export type Output = void
+  export type Output = string // id
 }

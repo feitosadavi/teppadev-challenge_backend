@@ -5,7 +5,7 @@ import {
   ICreateAccount,
   ICreateAccountRepository,
   Hasher,
-  IAuthenticator
+  TokenGenerator
 } from '@/application/protocols'
 import { Account } from '@/domain/entities'
 
@@ -24,19 +24,20 @@ describe('CreateAccount', () => {
 
   let fakeHasher: MockProxy<Hasher>
   let fakeCreateAccountRepository: MockProxy<ICreateAccountRepository>
-  let fakeAuthenticator: MockProxy<IAuthenticator>
+  let fakeTokenGenerator: MockProxy<TokenGenerator>
 
   let fakeCreateAccountInput: ICreateAccount.Input
   let fakeAccount: Account
 
   beforeAll(() => {
     fakeCreateAccountRepository = mock()
+    fakeCreateAccountRepository.create.mockResolvedValue('any_id')
 
     fakeHasher = mock()
     fakeHasher.hash.mockResolvedValue('hashed_password')
 
-    fakeAuthenticator = mock()
-    fakeAuthenticator.authenticate.mockResolvedValue('any_access_token')
+    fakeTokenGenerator = mock()
+    fakeTokenGenerator.generate.mockResolvedValue('any_access_token')
 
     fakeCreateAccountInput = makeFakeCreateAccountInput()
     fakeAccount = makeFakeAccount()
@@ -45,7 +46,7 @@ describe('CreateAccount', () => {
     sut = new CreateAccount(
       fakeHasher,
       fakeCreateAccountRepository,
-      fakeAuthenticator
+      fakeTokenGenerator
     )
   })
 
@@ -62,10 +63,10 @@ describe('CreateAccount', () => {
       .toHaveBeenCalledWith({ email, password: 'hashed_password' })
   })
 
-  it('should call authenticator with correct input', async () => {
+  it('should call tokenGenerator with correct input', async () => {
     await sut.execute(fakeCreateAccountInput)
-    expect(fakeAuthenticator.authenticate)
-      .toHaveBeenCalledWith(fakeCreateAccountInput)
+    expect(fakeTokenGenerator.generate)
+      .toHaveBeenCalledWith({ key: 'any_id' })
   })
 
   it('should return an accessToken on success', async () => {
