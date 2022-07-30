@@ -40,7 +40,11 @@ describe('JWTAdapter', () => {
     })
   })
 
-  describe('LoadAccountRepository', () => {
+  describe('LoadAccountByEmailRepository', () => {
+    it('should return null if db has not saved accounts', async () => {
+      const account = await sut.loadByEmail({ email: 'any@email.com' })
+      expect(account).toBeNull()
+    })
     it('should load a account by its email', async () => {
       let email = 'any@email.com'
       let password = 'hashed_password'
