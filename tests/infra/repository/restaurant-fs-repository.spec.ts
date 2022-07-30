@@ -9,9 +9,6 @@ describe('RestaurantFsRepository', () => {
   let sut: RestaurantFsRepository
   let db: FirebaseFirestore.Firestore
 
-  beforeAll(() => {
-  })
-
   beforeEach(() => {
     sut = new RestaurantFsRepository()
   })

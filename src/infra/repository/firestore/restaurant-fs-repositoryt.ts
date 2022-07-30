@@ -9,6 +9,6 @@ export class RestaurantFsRepository implements ICreateRestaurantRepository {
   }
 
   async create (input: ICreateRestaurantRepository.Input): Promise<ICreateRestaurantRepository.Output> {
-    this.restaurantsCollection.add(input)
+    await this.restaurantsCollection.add(input)
   }
 }
