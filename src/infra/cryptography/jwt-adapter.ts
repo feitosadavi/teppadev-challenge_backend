@@ -13,6 +13,6 @@ export class JWTAdapter implements TokenGenerator, TokenValidator {
 
   async validate ({ token }: TokenValidator.Input): Promise<TokenValidator.Output> {
     const payload = verify(token, this.secret) as JwtPayload
-    return
+    return payload.key
   }
 }
