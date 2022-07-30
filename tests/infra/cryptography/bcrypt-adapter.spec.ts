@@ -35,10 +35,18 @@ describe('BcryptAdapter', () => {
       expect(fakeBcrypt.hash).toHaveBeenCalledWith(input, salt)
     })
 
-    it('should return a hash on success', async () => {
+    it('should return a hashedValue on success', async () => {
       const hashedInput = await sut.hash(input)
 
       expect(hashedInput).toBe('any_hash')
+    })
+
+    it('should rethrow if sign throws', async () => {
+      fakeBcrypt.hash.mockImplementationOnce(() => { throw new Error('encryption_error') })
+
+      const promise = sut.hash(input)
+
+      await expect(promise).rejects.toThrow(new Error('encryption_error'))
     })
   })
 })
