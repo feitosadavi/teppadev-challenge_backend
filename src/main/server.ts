@@ -15,8 +15,7 @@ const alias = NODE_ENV === 'production' ? { '@': `${absolutePath}/build` } : { '
 moduleAlias.addAliases(alias)
 
 import { setupApp } from './config/app'
-import dotenv from 'dotenv-safe'
 
-dotenv.config({ example: './.env.example' })
 const app = setupApp()
 app.listen(PORT, () => console.log(`Server runing at ${'http://localhost:' + PORT}`))
+
