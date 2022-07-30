@@ -1,7 +1,6 @@
 import { MockProxy, mock } from 'jest-mock-extended'
 
 import {
-  ISignup,
   ICreateAccount,
   ICreateRestaurant,
   ILoadAccountByEmail
@@ -9,7 +8,7 @@ import {
 import { SignupController } from '@/application/controllers'
 import { Account } from '@/domain/entities'
 
-const makeFakeRequest = (): ISignup.Input => ({
+const makeFakeRequest = (): SignupController.Request => ({
   accountInput: {
     email: 'any@email.com',
     password: 'any_password'
@@ -32,7 +31,7 @@ describe('SignupController', () => {
   let fakeCreateAccount: MockProxy<ICreateAccount>
   let fakeCreateRestaurant: MockProxy<ICreateRestaurant>
 
-  let fakeRequest: ISignup.Input
+  let fakeRequest: SignupController.Request
 
   beforeAll(() => {
     fakeLoadAccountByEmail = mock()
