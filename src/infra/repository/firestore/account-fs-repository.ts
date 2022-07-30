@@ -16,9 +16,9 @@ export class AccountFsRepository implements ICreateAccountRepository, ILoadAccou
 
   async loadByEmail ({ email }: ILoadAccountByEmailRepository.Input): Promise<ILoadAccountByEmailRepository.Output> {
     const docs = (await this.accountsCollection.where('email', '==', email).get()).docs[0]
-    return {
-      id: docs.id,
+    return docs ? {
+      id: docs?.id,
       ...docs.data() as Omit<Account, 'id'>
-    }
+    } : null
   }
 }
