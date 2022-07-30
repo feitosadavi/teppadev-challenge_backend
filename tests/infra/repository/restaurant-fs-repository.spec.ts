@@ -29,8 +29,8 @@ describe('RestaurantFsRepository', () => {
 
     afterEach(async () => {
       // Clear database
-      const accountsCollection = db.collection('accounts')
-      const querySnapshot = await accountsCollection.get()
+      const restaurantsCollection = db.collection('restaurants')
+      const querySnapshot = await restaurantsCollection.get()
       querySnapshot.forEach(doc => doc.ref.delete())
     })
 
