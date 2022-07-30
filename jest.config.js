@@ -3,7 +3,8 @@ module.exports = {
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/main/**',
     '!<rootDir>/src/**/index.ts',
-    '!<rootDir>/src/**/*.protocol.ts'
+    '!<rootDir>/src/**/*.protocol.ts',
+    '!<rootDir>/src/**/*.entity.ts'
   ],
   coverageDirectory: 'coverage',
   coverageProvider: 'babel',
