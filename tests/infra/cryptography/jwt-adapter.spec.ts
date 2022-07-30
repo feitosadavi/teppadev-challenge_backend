@@ -50,13 +50,19 @@ describe('JWTAdapter', () => {
       token = 'any_token'
       key = 'any_key'
 
-      fakeJwt.verify.mockImplementation(() => key)
+      fakeJwt.verify.mockImplementation(() => ({ key }))
     })
 
     it('should call sign with correct params', async () => {
       await sut.validate({ token })
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
+    })
+
+    it('should return a key on success', async () => {
+      const returnedKey = await sut.validate({ token })
+
+      expect(returnedKey).toBe(key)
     })
   })
 })
