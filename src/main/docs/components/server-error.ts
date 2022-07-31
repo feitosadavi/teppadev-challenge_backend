@@ -3,7 +3,16 @@ export const serverError = {
   content: {
     'application/json': {
       schema: {
-        $ref: '#/schemas/error'
+        type: 'object',
+        properties: {
+          error: {
+            type: 'string'
+          }
+        },
+        example: {
+          error: 'Internal Server Error'
+        },
+        required: ['error']
       }
     }
   }

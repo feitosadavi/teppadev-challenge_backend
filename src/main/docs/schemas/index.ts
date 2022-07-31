@@ -1,1 +1,1 @@
-export * from './signup-params.schema'
+export * from './signup'

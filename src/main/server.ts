@@ -13,9 +13,10 @@ const {
 const absolutePath = resolve('.')
 const alias = NODE_ENV === 'production' ? { '@': `${absolutePath}/build` } : { '@': '/' }
 moduleAlias.addAliases(alias)
-
+import dotenv from 'dotenv-safe'
+dotenv.config()
 import { setupApp } from './config/app'
 
 const app = setupApp()
-app.listen(PORT, () => console.log(`Server runing at ${'http://localhost:' + PORT}`))
+app.listen(3000, () => console.log(`Server runing at ${'http://localhost:' + 3000}`))
 
