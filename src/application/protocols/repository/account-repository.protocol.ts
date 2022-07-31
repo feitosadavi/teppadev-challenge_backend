@@ -17,3 +17,15 @@ export namespace ILoadAccountByEmailRepository {
   export type Input = { email: string }
   export type Output = Account | null
 }
+
+export interface IUpdateAccountRepository {
+  update (input: IUpdateAccountRepository.Input): Promise<IUpdateAccountRepository.Output>
+}
+
+export namespace IUpdateAccountRepository {
+  export type Input = {
+    accountId: string
+    data: Partial<Omit<Account, 'id' | 'password'>>
+  }
+  export type Output = void
+}

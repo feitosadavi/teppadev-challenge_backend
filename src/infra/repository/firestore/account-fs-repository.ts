@@ -1,8 +1,8 @@
-import { ICreateAccountRepository, ILoadAccountByEmailRepository } from '@/application/protocols';
+import { ICreateAccountRepository, ILoadAccountByEmailRepository, IUpdateAccountRepository } from '@/application/protocols';
 import { Account } from '@/domain/entities';
 import { getFirestore } from 'firebase-admin/firestore'
 
-export class AccountFsRepository implements ICreateAccountRepository, ILoadAccountByEmailRepository {
+export class AccountFsRepository implements ICreateAccountRepository, ILoadAccountByEmailRepository, IUpdateAccountRepository {
   private readonly accountsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
 
   constructor() {
@@ -20,5 +20,10 @@ export class AccountFsRepository implements ICreateAccountRepository, ILoadAccou
       id: docs?.id,
       ...docs.data() as Omit<Account, 'id'>
     } : null
+  }
+
+  async update ({ accountId, data }: IUpdateAccountRepository.Input): Promise<IUpdateAccountRepository.Output> {
+    console.log({ accountId })
+    await this.accountsCollection.doc(accountId).update(data)
   }
 }
