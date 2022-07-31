@@ -38,4 +38,11 @@ describe('Authenticator', () => {
     expect(fakeHashComparer.compare)
       .toHaveBeenCalledWith({ hash: accountPassword, value: password })
   })
+
+  it('should return null if hashComparer returns null', async () => {
+    fakeHashComparer.compare.mockReturnValueOnce(null)
+    const accessToken = await sut.execute(fakeAuthenticatorInput)
+
+    expect(accessToken).toBeNull()
+  })
 })
