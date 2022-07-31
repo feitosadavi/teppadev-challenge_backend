@@ -5,7 +5,7 @@ import {
   ILoadAccountByEmail,
   IAuthenticator
 } from '@/application/protocols'
-import { EmailNotFound } from './errors'
+import { EmailNotFound, IncorrectPasswordError } from './errors'
 import { badRequest, ok, serverError } from './helpers/http.helper'
 
 export class LoginController implements Controller<LoginController.Request, LoginController.Reponse> {
@@ -27,7 +27,8 @@ export class LoginController implements Controller<LoginController.Request, Logi
       if (!account) return badRequest(new EmailNotFound())
 
       const { id: accountId, password: accountPassword } = account
-      await this.authenticator.authenticate({ email, password, accountPassword, accountId })
+      const accessToken = await this.authenticator.execute({ email, password, accountPassword, accountId })
+      if (!accessToken) return badRequest(new IncorrectPasswordError())
 
       return
 
