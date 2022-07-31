@@ -49,7 +49,7 @@ describe('SignupRoutes', () => {
         }
       }
       const { status, body } = await request(app).post('/api/signup').send(params)
-      expect(body.error).toBe({})
+      expect(body.error).toBeTruthy()
       expect(status).toBe(400)
     })
 
