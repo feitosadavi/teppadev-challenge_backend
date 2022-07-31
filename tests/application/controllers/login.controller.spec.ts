@@ -8,7 +8,7 @@ import {
 } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
 import { EmailNotFound, IncorrectPasswordError } from '@/application/controllers/errors'
-import { badRequest, serverError } from '@/application/controllers/helpers'
+import { badRequest, serverError, ok } from '@/application/controllers/helpers'
 
 const makeFakeRequest = (): LoginController.Request => ({
   email: 'any@email.com',
@@ -76,6 +76,13 @@ describe('LoginController', () => {
     const { id: accountId, password: accountPassword } = makeFakeAccount()
     expect(fakeAuthenticator.execute)
       .toHaveBeenCalledWith({ email, password, accountId, accountPassword })
+  })
+
+  it('should return 200 on success', async () => {
+    const response = await sut.handle(fakeRequest)
+    const { id } = makeFakeAccount()
+    expect(response)
+      .toEqual(ok({ accessToken: 'any_access_token', id }))
   })
 
   it('should return 500 on error', async () => {
