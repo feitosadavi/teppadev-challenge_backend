@@ -23,7 +23,6 @@ export class AccountFsRepository implements ICreateAccountRepository, ILoadAccou
   }
 
   async update ({ accountId, data }: IUpdateAccountRepository.Input): Promise<IUpdateAccountRepository.Output> {
-    console.log({ accountId })
     await this.accountsCollection.doc(accountId).update(data)
   }
 }

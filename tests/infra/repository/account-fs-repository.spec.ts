@@ -17,6 +17,10 @@ describe('JWTAdapter', () => {
     querySnapshot.forEach(doc => doc.ref.delete())
   }
 
+  // const loadById = (id: string) => {
+  //   const docRef = doc(db, "users", id);
+  // }
+
   beforeAll(() => {
     initializeApp({
       credential: cert(FS_KEY as any)
@@ -57,6 +61,21 @@ describe('JWTAdapter', () => {
       const account = await sut.loadByEmail({ email: 'any@email.com' })
       expect(account.id).toBeTruthy()
       expect(account.email).toBe('any@email.com')
+    })
+  })
+
+  describe('UpdateAccountRepository', () => {
+    beforeEach(async () => {
+      clearDatabase()
+    })
+
+    it('should update account on success', async () => {
+      let email = 'any@email.com'
+      let password = 'hashed_password'
+      const accountId = (await db.collection('accounts').add({ email, password })).id
+      await sut.update({ data: { email: 'other@email.com' }, accountId })
+      const updatedAccount = (await db.collection('accounts').doc(accountId).get()).data()
+      expect(updatedAccount.email).toBe('other@email.com')
     })
   })
 })
