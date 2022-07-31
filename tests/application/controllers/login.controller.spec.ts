@@ -3,7 +3,8 @@ import { MockProxy, mock } from 'jest-mock-extended'
 import { Account } from '@/domain/entities'
 import {
   IValidator,
-  ILoadAccountByEmail
+  ILoadAccountByEmail,
+  IAuthenticator
 } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
 import { EmailNotFound } from '@/application/controllers/errors'
@@ -20,11 +21,14 @@ const makeFakeAccount = (): Account => ({
   password: 'hashed_password'
 })
 
+const makeFakeAuthenticatorResult = (): IAuthenticator.Output => 'any_access_token'
+
 describe('LoginController', () => {
   let sut: LoginController
 
   let fakeValidator: MockProxy<IValidator>
   let fakeLoadAccountByEmail: MockProxy<ILoadAccountByEmail>
+  let fakeAuthenticator: MockProxy<IAuthenticator>
 
   let fakeRequest: LoginController.Request
 
@@ -32,7 +36,10 @@ describe('LoginController', () => {
     fakeValidator = mock()
 
     fakeLoadAccountByEmail = mock()
-    fakeLoadAccountByEmail.execute.mockResolvedValue(null)
+    fakeLoadAccountByEmail.execute.mockResolvedValue(makeFakeAccount())
+
+    fakeAuthenticator = mock()
+    fakeAuthenticator.authenticate.mockResolvedValue(makeFakeAuthenticatorResult())
 
     fakeRequest = makeFakeRequest()
   })
@@ -40,6 +47,7 @@ describe('LoginController', () => {
     sut = new LoginController(
       fakeValidator,
       fakeLoadAccountByEmail,
+      fakeAuthenticator
     )
   })
 
@@ -54,6 +62,14 @@ describe('LoginController', () => {
     fakeLoadAccountByEmail.execute.mockReturnValueOnce(null)
     const response = await sut.handle(fakeRequest)
     expect(response).toEqual(badRequest(new EmailNotFound()))
+  })
+
+  it('should call authenticator with correct input', async () => {
+    await sut.handle(fakeRequest)
+    const { email, password } = fakeRequest
+    const { id: accountId, password: accountPassword } = makeFakeAccount()
+    expect(fakeAuthenticator.authenticate)
+      .toHaveBeenCalledWith({ email, password, accountId, accountPassword })
   })
 
   it('should return 500 on error', async () => {
