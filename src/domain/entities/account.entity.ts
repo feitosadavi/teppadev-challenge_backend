@@ -2,4 +2,5 @@ export type Account = {
   id: string
   email: string
   password: string
+  accessToken?: string
 }

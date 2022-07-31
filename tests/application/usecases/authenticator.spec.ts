@@ -4,7 +4,8 @@ import { Authenticator } from '@/application/usecases'
 import {
   IAuthenticator,
   IHashComparer,
-  TokenGenerator
+  TokenGenerator,
+  IUpdateAccountRepository
 } from '@/application/protocols'
 
 const makeFakeAuthenticatorInput = (): IAuthenticator.Input => ({
@@ -18,6 +19,7 @@ describe('Authenticator', () => {
 
   let fakeHashComparer: MockProxy<IHashComparer>
   let fakeTokenGenerator: MockProxy<TokenGenerator>
+  let fakeUpdateAccountRepository: MockProxy<IUpdateAccountRepository>
 
   let fakeAuthenticatorInput: IAuthenticator.Input
 
@@ -28,12 +30,15 @@ describe('Authenticator', () => {
     fakeTokenGenerator = mock()
     fakeTokenGenerator.generate.mockResolvedValue('any_access_token')
 
+    fakeUpdateAccountRepository = mock()
+
     fakeAuthenticatorInput = makeFakeAuthenticatorInput()
   })
   beforeEach(() => {
     sut = new Authenticator(
       fakeHashComparer,
-      fakeTokenGenerator
+      fakeTokenGenerator,
+      fakeUpdateAccountRepository
     )
   })
 
@@ -58,6 +63,14 @@ describe('Authenticator', () => {
 
     expect(fakeTokenGenerator.generate)
       .toHaveBeenCalledWith({ key: accountId })
+  })
+
+  it('should call updateAccountRepository with correct input', async () => {
+    await sut.execute(fakeAuthenticatorInput)
+    const { accountId } = fakeAuthenticatorInput
+
+    expect(fakeUpdateAccountRepository.update)
+      .toHaveBeenCalledWith({ accountId, data: { accessToken: 'any_access_token' } })
   })
 
   it('should return an accessToken on success', async () => {
