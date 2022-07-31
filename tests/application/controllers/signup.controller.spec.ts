@@ -2,6 +2,7 @@ import { MockProxy, mock } from 'jest-mock-extended'
 
 import { Account } from '@/domain/entities'
 import {
+  IValidator,
   ICreateAccount,
   ICreateRestaurant,
   ILoadAccountByEmail
@@ -29,6 +30,7 @@ const makeFakeAccount = (): Account => ({
 describe('SignupController', () => {
   let sut: SignupController
 
+  let fakeValidator: MockProxy<IValidator>
   let fakeLoadAccountByEmail: MockProxy<ILoadAccountByEmail>
   let fakeCreateAccount: MockProxy<ICreateAccount>
   let fakeCreateRestaurant: MockProxy<ICreateRestaurant>
@@ -36,6 +38,8 @@ describe('SignupController', () => {
   let fakeRequest: SignupController.Request
 
   beforeAll(() => {
+    fakeValidator = mock()
+
     fakeLoadAccountByEmail = mock()
     fakeLoadAccountByEmail.execute.mockResolvedValue(null)
 
@@ -48,10 +52,18 @@ describe('SignupController', () => {
   })
   beforeEach(() => {
     sut = new SignupController(
+      fakeValidator,
       fakeLoadAccountByEmail,
       fakeCreateAccount,
       fakeCreateRestaurant
     )
+  })
+
+  it('should call validator with correct input', async () => {
+    await sut.handle(fakeRequest)
+
+    expect(fakeValidator.validate)
+      .toHaveBeenCalledWith(fakeRequest)
   })
 
   it('should call createAccount with correct input', async () => {
