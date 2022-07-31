@@ -27,7 +27,7 @@ export class LoginController implements Controller<LoginController.Request, Logi
       if (!account) return badRequest(new EmailNotFound())
 
       const { id: accountId, password: accountPassword } = account
-      const accessToken = await this.authenticator.execute({ email, password, accountPassword, accountId })
+      const accessToken = await this.authenticator.execute({ password, accountPassword, accountId })
       if (!accessToken) return badRequest(new IncorrectPasswordError())
 
       return ok({ accessToken, id: accountId })

@@ -72,10 +72,10 @@ describe('LoginController', () => {
 
   it('should call authenticator with correct input', async () => {
     await sut.handle(fakeRequest)
-    const { email, password } = fakeRequest
+    const { password } = fakeRequest
     const { id: accountId, password: accountPassword } = makeFakeAccount()
     expect(fakeAuthenticator.execute)
-      .toHaveBeenCalledWith({ email, password, accountId, accountPassword })
+      .toHaveBeenCalledWith({ password, accountId, accountPassword })
   })
 
   it('should return 200 on success', async () => {
