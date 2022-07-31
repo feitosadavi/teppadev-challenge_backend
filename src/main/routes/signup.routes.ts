@@ -4,8 +4,11 @@ import { SignupController } from '@/application/controllers'
 import { AccountFsRepository, RestaurantFsRepository } from '@/infra/repository'
 import { CreateAccount, CreateRestaurant, LoadAccountByEmail } from '@/application/usecases'
 import { BcryptAdapter, JWTAdapter } from '@/infra/cryptography'
+import { SignupControllerValidator } from '@/infra/validation/signup-controller.validator'
 
 const makeSignupController = () => {
+  const signupControllerValidator = new SignupControllerValidator()
+
   const accountFsRepository = new AccountFsRepository()
   const restaurantFsRepository = new RestaurantFsRepository()
 
@@ -17,7 +20,7 @@ const makeSignupController = () => {
   const createAccount = new CreateAccount(bcryptAdapter, accountFsRepository, tokenGenerator)
   const createRestaurant = new CreateRestaurant(restaurantFsRepository)
 
-  return new SignupController(loadAccountByEmail, createAccount, createRestaurant)
+  return new SignupController(signupControllerValidator, loadAccountByEmail, createAccount, createRestaurant)
 }
 
 export default (router: Router): void => {
