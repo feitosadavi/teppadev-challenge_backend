@@ -20,3 +20,9 @@ export class EmailInUseError extends Error {
   }
 }
 
+export class EmailNotFound extends Error {
+  constructor() {
+    super('Não existe uma conta com o email inserido')
+    this.name = 'EmailInUseError'
+  }
+}
