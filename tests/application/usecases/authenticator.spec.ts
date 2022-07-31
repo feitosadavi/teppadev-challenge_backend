@@ -26,7 +26,7 @@ describe('Authenticator', () => {
     fakeHashComparer.compare.mockResolvedValue(true)
 
     fakeTokenGenerator = mock()
-    fakeTokenGenerator.generate.mockResolvedValue('any_token')
+    fakeTokenGenerator.generate.mockResolvedValue('any_access_token')
 
     fakeAuthenticatorInput = makeFakeAuthenticatorInput()
   })
@@ -58,5 +58,11 @@ describe('Authenticator', () => {
 
     expect(fakeTokenGenerator.generate)
       .toHaveBeenCalledWith({ key: accountId })
+  })
+
+  it('should return an accessToken on success', async () => {
+    const accessToken = await sut.execute(fakeAuthenticatorInput)
+
+    expect(accessToken).toBe('any_access_token')
   })
 })
