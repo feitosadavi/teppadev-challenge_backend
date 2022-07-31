@@ -3,6 +3,7 @@ import {
   Controller,
   HttpResponse,
   ILoadAccountByEmail,
+  IAuthenticator
 } from '@/application/protocols'
 import { EmailNotFound } from './errors'
 import { badRequest, ok, serverError } from './helpers/http.helper'
@@ -11,6 +12,8 @@ export class LoginController implements Controller<LoginController.Request, Logi
   constructor(
     private readonly validator: IValidator,
     private readonly loadAccountByEmail: ILoadAccountByEmail,
+    private readonly authenticator: IAuthenticator,
+
   ) { }
 
   async handle (req: LoginController.Request): Promise<HttpResponse<LoginController.Reponse>> {
@@ -23,6 +26,8 @@ export class LoginController implements Controller<LoginController.Request, Logi
       const account = await this.loadAccountByEmail.execute({ email })
       if (!account) return badRequest(new EmailNotFound())
 
+      const { id: accountId, password: accountPassword } = account
+      await this.authenticator.authenticate({ email, password, accountPassword, accountId })
 
       return
 

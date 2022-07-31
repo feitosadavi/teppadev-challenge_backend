@@ -6,6 +6,8 @@ export namespace IAuthenticator {
   export type Input = {
     email: string
     password: string
+    accountPassword: string
+    accountId: string
   }
   export type Output = string | null // accessToken
 }
