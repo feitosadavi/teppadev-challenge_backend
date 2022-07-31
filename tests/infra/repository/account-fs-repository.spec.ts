@@ -1,5 +1,3 @@
-import { JWTAdapter } from '@/infra/cryptography'
-
 import { initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { AccountFsRepository } from '@/infra/repository'
@@ -16,10 +14,6 @@ describe('JWTAdapter', () => {
     const querySnapshot = await accountsCollection.get()
     querySnapshot.forEach(doc => doc.ref.delete())
   }
-
-  // const loadById = (id: string) => {
-  //   const docRef = doc(db, "users", id);
-  // }
 
   beforeAll(() => {
     initializeApp({
@@ -76,6 +70,15 @@ describe('JWTAdapter', () => {
       await sut.update({ data: { email: 'other@email.com' }, accountId })
       const updatedAccount = (await db.collection('accounts').doc(accountId).get()).data()
       expect(updatedAccount.email).toBe('other@email.com')
+    })
+
+    it('should create a new field on update success if it didnt exists', async () => {
+      let email = 'any@email.com'
+      let password = 'hashed_password'
+      const accountId = (await db.collection('accounts').add({ email, password })).id
+      await sut.update({ data: { accessToken: 'any_access_token' }, accountId })
+      const updatedAccount = (await db.collection('accounts').doc(accountId).get()).data()
+      expect(updatedAccount.accessToken).toBe('any_access_token')
     })
   })
 })
