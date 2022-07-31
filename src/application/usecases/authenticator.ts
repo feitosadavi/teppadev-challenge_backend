@@ -14,7 +14,7 @@ export class Authenticator implements IAuthenticator {
     const matched = await this.hashComparer.compare({ value: password, hash: accountPassword });
     if (matched) {
       const accessToken = await this.tokenGenerator.generate({ key: accountId })
-      // return accessToken
+      return accessToken
     }
     return null
   }
