@@ -4,6 +4,7 @@ import { Authenticator } from '@/application/usecases'
 import {
   IAuthenticator,
   IHashComparer,
+  TokenGenerator
 } from '@/application/protocols'
 
 const makeFakeAuthenticatorInput = (): IAuthenticator.Input => ({
@@ -16,6 +17,7 @@ describe('Authenticator', () => {
   let sut: Authenticator
 
   let fakeHashComparer: MockProxy<IHashComparer>
+  let fakeTokenGenerator: MockProxy<TokenGenerator>
 
   let fakeAuthenticatorInput: IAuthenticator.Input
 
@@ -23,11 +25,15 @@ describe('Authenticator', () => {
     fakeHashComparer = mock()
     fakeHashComparer.compare.mockResolvedValue(true)
 
+    fakeTokenGenerator = mock()
+    fakeTokenGenerator.generate.mockResolvedValue('any_token')
+
     fakeAuthenticatorInput = makeFakeAuthenticatorInput()
   })
   beforeEach(() => {
     sut = new Authenticator(
       fakeHashComparer,
+      fakeTokenGenerator
     )
   })
 
@@ -44,5 +50,13 @@ describe('Authenticator', () => {
     const accessToken = await sut.execute(fakeAuthenticatorInput)
 
     expect(accessToken).toBeNull()
+  })
+
+  it('should call tokenGenerator with correct input', async () => {
+    await sut.execute(fakeAuthenticatorInput)
+    const { accountId } = fakeAuthenticatorInput
+
+    expect(fakeTokenGenerator.generate)
+      .toHaveBeenCalledWith({ key: accountId })
   })
 })
