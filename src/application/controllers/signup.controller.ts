@@ -1,4 +1,5 @@
 import {
+  IValidator,
   Controller,
   HttpResponse,
   ILoadAccountByEmail,
@@ -10,6 +11,7 @@ import { badRequest, ok, serverError } from './helpers/http.helper'
 
 export class SignupController implements Controller<SignupController.Request, SignupController.Reponse> {
   constructor(
+    private readonly validator: IValidator,
     private readonly loadAccountByEmail: ILoadAccountByEmail,
     private readonly createAccount: ICreateAccount,
     private readonly createRestaurant: ICreateRestaurant
@@ -17,6 +19,9 @@ export class SignupController implements Controller<SignupController.Request, Si
 
   async handle ({ accountInput, restaurantInput }: SignupController.Request): Promise<HttpResponse<SignupController.Reponse>> {
     try {
+      const error = this.validator.validate({ accountInput, restaurantInput })
+      if (error) return badRequest(error)
+
       const account = await this.loadAccountByEmail.execute({ email: accountInput.email })
       if (account) return badRequest(new EmailInUseError())
 
