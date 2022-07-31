@@ -30,7 +30,7 @@ export class LoginController implements Controller<LoginController.Request, Logi
       const accessToken = await this.authenticator.execute({ email, password, accountPassword, accountId })
       if (!accessToken) return badRequest(new IncorrectPasswordError())
 
-      return
+      return ok({ accessToken, id: accountId })
 
     } catch (error) {
       return serverError(error)
