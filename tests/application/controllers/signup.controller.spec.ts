@@ -1,12 +1,14 @@
 import { MockProxy, mock } from 'jest-mock-extended'
 
+import { Account } from '@/domain/entities'
 import {
   ICreateAccount,
   ICreateRestaurant,
   ILoadAccountByEmail
 } from '@/application/protocols'
 import { SignupController } from '@/application/controllers'
-import { Account } from '@/domain/entities'
+import { EmailInUseError } from '@/application/controllers/errors'
+import { badRequest, ok, serverError } from '@/application/controllers/helpers'
 
 const makeFakeRequest = (): SignupController.Request => ({
   accountInput: {
@@ -62,11 +64,7 @@ describe('SignupController', () => {
   it('should return 400 if loadAccountByEmail returns null', async () => {
     fakeLoadAccountByEmail.execute.mockReturnValueOnce(Promise.resolve(makeFakeAccount()))
     const response = await sut.handle(fakeRequest)
-    expect(response)
-      .toEqual({
-        statusCode: 400,
-        body: 'O email inserido já está em uso'
-      })
+    expect(response).toEqual(badRequest(new EmailInUseError()))
   })
 
   it('should call createRestaurant with correct input', async () => {
@@ -79,19 +77,13 @@ describe('SignupController', () => {
   it('should return 200 on success', async () => {
     const response = await sut.handle(fakeRequest)
     expect(response)
-      .toEqual({
-        statusCode: 200,
-        body: { accessToken: 'any_access_token' }
-      })
+      .toEqual(ok({ accessToken: 'any_access_token' }))
   })
 
   it('should return 500 on error', async () => {
     fakeCreateAccount.execute.mockRejectedValueOnce(new Error())
     const response = await sut.handle(fakeRequest)
     expect(response)
-      .toEqual({
-        statusCode: 500,
-        body: new Error()
-      })
+      .toEqual(serverError(new Error()))
   })
 })

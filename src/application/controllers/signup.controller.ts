@@ -5,6 +5,8 @@ import {
   ICreateAccount,
   ICreateRestaurant
 } from '@/application/protocols'
+import { EmailInUseError } from './errors'
+import { badRequest, ok, serverError } from './helpers/http.helper'
 
 export class SignupController implements Controller<SignupController.Request, SignupController.Reponse> {
   constructor(
@@ -16,22 +18,16 @@ export class SignupController implements Controller<SignupController.Request, Si
   async handle ({ accountInput, restaurantInput }: SignupController.Request): Promise<HttpResponse<SignupController.Reponse>> {
     try {
       const account = await this.loadAccountByEmail.execute({ email: accountInput.email })
-      if (account) return { statusCode: 400, body: 'O email inserido já está em uso' }
+      if (account) return badRequest(new EmailInUseError())
 
       const accessToken = await this.createAccount.execute(accountInput)
 
       await this.createRestaurant.execute(restaurantInput)
 
-      return {
-        statusCode: 200,
-        body: accessToken
-      }
+      return ok(accessToken)
 
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: error
-      }
+      return serverError(error)
     }
   }
 }
