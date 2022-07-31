@@ -5,7 +5,7 @@ import { SignupController } from '@/application/controllers'
 import { setupApp } from '@/main/config'
 import { getFirestore } from 'firebase-admin/firestore'
 
-import FS_KEY from '@/../fs-key.json'
+import FS_KEY from '@/../fs-key'
 import { initializeApp, cert } from 'firebase-admin/app'
 
 describe('SignupRoutes', () => {

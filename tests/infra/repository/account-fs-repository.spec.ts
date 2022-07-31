@@ -3,7 +3,7 @@ import { JWTAdapter } from '@/infra/cryptography'
 import { initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { AccountFsRepository } from '@/infra/repository'
-import FS_KEY from '@/../fs-key.json'
+import FS_KEY from '@/../fs-key'
 
 
 jest.mock('jsonwebtoken')

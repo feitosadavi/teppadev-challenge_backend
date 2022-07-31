@@ -2,7 +2,7 @@
 import { initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { RestaurantFsRepository } from '@/infra/repository'
-import FS_KEY from '@/../fs-key.json'
+import FS_KEY from '@/../fs-key'
 
 
 describe('RestaurantFsRepository', () => {

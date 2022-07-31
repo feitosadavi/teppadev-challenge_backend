@@ -1,5 +1,5 @@
 node_modules
 package-lock.json
-fs-key.json
 coverage
 .env
+fs-key-local.ts
