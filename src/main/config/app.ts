@@ -1,10 +1,12 @@
 import express, { Express } from 'express';
-import { initializeApp, cert } from 'firebase-admin/app'
-import FS_KEY from '@/../fs-key.json'
 import dotenv from 'dotenv-safe'
+import { initializeApp, cert } from 'firebase-admin/app'
+import { serve, setup, SwaggerUiOptions } from 'swagger-ui-express'
 
+import FS_KEY from '@/../fs-key.json'
 import setupRoutes from './routes';
 import { setupMiddlewares } from './middlewares';
+import swaggerDocument from '@/main/docs'
 
 export const setupApp = (): Express => {
   dotenv.config({ example: './.env.example' })
@@ -18,6 +20,9 @@ export const setupApp = (): Express => {
 
   setupMiddlewares(app);
   setupRoutes(app);
+  app.use('/docs', serve)
+  const options: SwaggerUiOptions = { explorer: true }
+  app.get('/docs', setup(swaggerDocument, options))
 
   return app;
 };
