@@ -8,6 +8,7 @@ import { getFirestore } from 'firebase-admin/firestore'
 import FS_KEY from '@/../fs-key'
 import { initializeApp, cert } from 'firebase-admin/app'
 
+
 describe('SignupRoutes', () => {
   let app: Express
 
@@ -28,16 +29,30 @@ describe('SignupRoutes', () => {
   beforeAll(() => {
     initializeApp({
       credential: cert(FS_KEY as any),
-    }, 'test');
+    }, `test-${Math.random()}`);
   })
 
   beforeEach(async () => {
+    initializeApp({
+      credential: cert(FS_KEY as any),
+    }, `test-${Math.random()}`);
     app = setupApp()
     await clearAccountsDatabase()
     await clearRestaurantsDatabase()
   })
 
   describe('POST /signup', () => {
+    it('should return 400 if some fields were missing', async () => {
+      const params = {
+        restaurantInput: {
+          name: 'any_name'
+        }
+      }
+      const { status, body } = await request(app).post('/api/signup').send(params)
+      expect(body.error).toBe({})
+      expect(status).toBe(400)
+    })
+
     it('should return 200 on success', async () => {
       const params: SignupController.Request = {
         accountInput: {
