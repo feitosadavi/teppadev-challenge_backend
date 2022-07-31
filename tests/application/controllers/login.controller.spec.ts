@@ -7,7 +7,7 @@ import {
   IAuthenticator
 } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
-import { EmailNotFound } from '@/application/controllers/errors'
+import { EmailNotFound, IncorrectPasswordError } from '@/application/controllers/errors'
 import { badRequest, serverError } from '@/application/controllers/helpers'
 
 const makeFakeRequest = (): LoginController.Request => ({
@@ -39,7 +39,7 @@ describe('LoginController', () => {
     fakeLoadAccountByEmail.execute.mockResolvedValue(makeFakeAccount())
 
     fakeAuthenticator = mock()
-    fakeAuthenticator.authenticate.mockResolvedValue(makeFakeAuthenticatorResult())
+    fakeAuthenticator.execute.mockResolvedValue(makeFakeAuthenticatorResult())
 
     fakeRequest = makeFakeRequest()
   })
@@ -64,11 +64,17 @@ describe('LoginController', () => {
     expect(response).toEqual(badRequest(new EmailNotFound()))
   })
 
+  it('should return 400 if loadAccountByEmail returns null', async () => {
+    fakeAuthenticator.execute.mockReturnValueOnce(null)
+    const response = await sut.handle(fakeRequest)
+    expect(response).toEqual(badRequest(new IncorrectPasswordError()))
+  })
+
   it('should call authenticator with correct input', async () => {
     await sut.handle(fakeRequest)
     const { email, password } = fakeRequest
     const { id: accountId, password: accountPassword } = makeFakeAccount()
-    expect(fakeAuthenticator.authenticate)
+    expect(fakeAuthenticator.execute)
       .toHaveBeenCalledWith({ email, password, accountId, accountPassword })
   })
 
