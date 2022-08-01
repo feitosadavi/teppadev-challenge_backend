@@ -58,6 +58,28 @@ describe('JWTAdapter', () => {
     })
   })
 
+  describe('LoadAccountByEmailRepository', () => {
+    beforeEach(async () => {
+      clearDatabase()
+    })
+
+    it('should return null if account was not found', async () => {
+      const account = await sut.loadByToken({ accessToken: 'any_access_token' })
+      expect(account).toBeNull()
+    })
+    it('should load a account by its email', async () => {
+      let email = 'any@email.com'
+      let password = 'hashed_password'
+      const accessToken = 'any_access_token'
+
+      await db.collection('accounts').add({ email, password, accessToken })
+
+      const account = await sut.loadByToken({ accessToken })
+      expect(account.id).toBeTruthy()
+      expect(account.accessToken).toBe(accessToken)
+    })
+  })
+
   describe('UpdateAccountRepository', () => {
     beforeEach(async () => {
       clearDatabase()
