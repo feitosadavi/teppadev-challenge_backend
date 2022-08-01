@@ -1,9 +1,18 @@
 import { Router } from 'express'
-import { adaptRoute } from '@/main/adapters'
+import { adaptRoute, adaptMiddleware } from '@/main/adapters'
 import { UpdateAccountController } from '@/application/controllers'
 import { AccountFsRepository } from '@/infra/repository'
-import { UpdateAccount } from '@/application/usecases'
+import { LoadAccountByToken, UpdateAccount } from '@/application/usecases'
 import { UpdateAccountControllerValidator } from '@/infra/validation'
+import { AuthMiddleware } from '@/application/middlewares'
+
+const makeAuthMiddleware = () => {
+  const accountFsRepository = new AccountFsRepository()
+
+  const loadAccountByToken = new LoadAccountByToken(accountFsRepository)
+
+  return new AuthMiddleware(loadAccountByToken)
+}
 
 const makeUpdateAccountController = () => {
   const updateAccountControllerValidator = new UpdateAccountControllerValidator()
@@ -15,6 +24,8 @@ const makeUpdateAccountController = () => {
   return new UpdateAccountController(updateAccountControllerValidator, updateAccount)
 }
 
+
+
 export default (router: Router): void => {
-  router.put('/accounts/update', adaptRoute(makeUpdateAccountController()))
+  router.put('/accounts/update', adaptMiddleware(makeAuthMiddleware()), adaptRoute(makeUpdateAccountController()))
 }
