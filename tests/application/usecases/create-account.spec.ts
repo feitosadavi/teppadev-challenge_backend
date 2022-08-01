@@ -69,8 +69,8 @@ describe('CreateAccount', () => {
       .toHaveBeenCalledWith({ key: 'any_id' })
   })
 
-  it('should return an accessToken on success', async () => {
+  it('should return an accessToken and id on success', async () => {
     const account = await sut.execute(fakeCreateAccountInput)
-    expect(account).toEqual({ accessToken: 'any_access_token' })
+    expect(account).toEqual({ accessToken: 'any_access_token', id: 'any_id' })
   })
 })

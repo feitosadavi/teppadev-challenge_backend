@@ -44,7 +44,7 @@ describe('SignupController', () => {
     fakeLoadAccountByEmail.execute.mockResolvedValue(null)
 
     fakeCreateAccount = mock()
-    fakeCreateAccount.execute.mockReturnValue(Promise.resolve({ accessToken: 'any_access_token' }))
+    fakeCreateAccount.execute.mockReturnValue(Promise.resolve({ accessToken: 'any_access_token', id: 'any_id' }))
 
     fakeCreateRestaurant = mock()
 
@@ -89,7 +89,7 @@ describe('SignupController', () => {
   it('should return 200 on success', async () => {
     const response = await sut.handle(fakeRequest)
     expect(response)
-      .toEqual(ok({ accessToken: 'any_access_token' }))
+      .toEqual(ok({ accessToken: 'any_access_token', id: 'any_id' }))
   })
 
   it('should return 500 on error', async () => {

@@ -16,6 +16,6 @@ export class CreateAccount implements ICreateAccount {
     const hashedPassword = await this.hasher.hash(password);
     const id = await this.createAccountRepository.create({ email, password: hashedPassword })
     const accessToken = await this.tokenGenerator.generate({ key: id })
-    return { accessToken }
+    return { accessToken, id }
   }
 }

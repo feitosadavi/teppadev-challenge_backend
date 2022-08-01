@@ -8,5 +8,6 @@ export namespace ICreateAccount {
   export type Input = Omit<Account, 'id'>
   export type Output = {
     accessToken: string
+    id: string
   }
 }
