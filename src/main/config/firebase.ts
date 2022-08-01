@@ -1,5 +1,5 @@
 import { initializeApp, cert } from 'firebase-admin/app'
-import FS_KEY from '@/../fs-key'
+import FS_KEY from './fs-key'
 
 export const setupFirebase = (appName?: string): void => {
   // const {
