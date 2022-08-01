@@ -15,7 +15,8 @@ export class UpdateAccountController implements Controller<UpdateAccountControll
 
   async handle (req: UpdateAccountController.Request): Promise<HttpResponse<UpdateAccountController.Reponse>> {
     try {
-      const error = this.validator.validate(req.data)
+      const { accountId, ...fieldsToValidate } = req
+      const error = this.validator.validate(fieldsToValidate)
       if (error) return badRequest(error)
 
       await this.updateAccount.execute(req)

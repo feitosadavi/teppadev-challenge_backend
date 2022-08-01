@@ -39,9 +39,9 @@ describe('UpdateAccountController', () => {
 
   it('should call validator with correct input', async () => {
     await sut.handle(fakeRequest)
-
+    const { accountId, ...fieldsToUpdate } = fakeRequest
     expect(fakeValidator.validate)
-      .toHaveBeenCalledWith(fakeRequest.data)
+      .toHaveBeenCalledWith(fieldsToUpdate)
   })
 
   it('should return 400 if validator returns an error', async () => {
