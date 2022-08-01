@@ -1,5 +1,5 @@
-export * from './signup.protocol'
 export * from './create-account.protocol'
 export * from './create-restaurant.protocol'
 export * from './authenticator.protocol'
 export * from './load-account-by-email.protocol'
+export * from './update-account.protocol'
