@@ -7,7 +7,8 @@ import {
 } from '@/application/protocols'
 
 const makefakeCreateRestaurantInput = (): ICreateRestaurant.Input => ({
-  name: 'any_name'
+  name: 'any_name',
+  accountId: 'any_id'
 })
 
 describe('CreateRestaurant', () => {

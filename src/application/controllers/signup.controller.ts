@@ -25,11 +25,11 @@ export class SignupController implements Controller<SignupController.Request, Si
       const account = await this.loadAccountByEmail.execute({ email: accountInput.email })
       if (account) return badRequest(new EmailInUseError())
 
-      const accessToken = await this.createAccount.execute(accountInput)
+      const { accessToken, id } = await this.createAccount.execute(accountInput)
 
-      await this.createRestaurant.execute(restaurantInput)
+      await this.createRestaurant.execute({ ...restaurantInput, accountId: id })
 
-      return ok(accessToken)
+      return ok({ accessToken })
 
     } catch (error) {
       return serverError(error)
@@ -40,7 +40,7 @@ export class SignupController implements Controller<SignupController.Request, Si
 export namespace SignupController {
   type Data = {
     accountInput: ICreateAccount.Input
-    restaurantInput: ICreateRestaurant.Input
+    restaurantInput: Omit<ICreateRestaurant.Input, 'accountId'>
   }
   export type Request = Data
   export type Reponse = {

@@ -27,6 +27,11 @@ const makeFakeAccount = (): Account => ({
   password: 'hashed_password'
 })
 
+const makeFakeCreateAccountResolvedValue = (): ICreateAccount.Output => ({
+  accessToken: 'any_access_token',
+  id: 'any_account_id'
+})
+
 describe('SignupController', () => {
   let sut: SignupController
 
@@ -36,19 +41,22 @@ describe('SignupController', () => {
   let fakeCreateRestaurant: MockProxy<ICreateRestaurant>
 
   let fakeRequest: SignupController.Request
+  let fakeCreateAccountResolvedValue: ICreateAccount.Output
 
   beforeAll(() => {
+    fakeRequest = makeFakeRequest()
+    fakeCreateAccountResolvedValue = makeFakeCreateAccountResolvedValue()
+
     fakeValidator = mock()
 
     fakeLoadAccountByEmail = mock()
     fakeLoadAccountByEmail.execute.mockResolvedValue(null)
 
     fakeCreateAccount = mock()
-    fakeCreateAccount.execute.mockReturnValue(Promise.resolve({ accessToken: 'any_access_token', id: 'any_id' }))
+    fakeCreateAccount.execute.mockReturnValue(Promise.resolve(fakeCreateAccountResolvedValue))
 
     fakeCreateRestaurant = mock()
 
-    fakeRequest = makeFakeRequest()
   })
   beforeEach(() => {
     sut = new SignupController(
@@ -83,13 +91,13 @@ describe('SignupController', () => {
     await sut.handle(fakeRequest)
 
     expect(fakeCreateRestaurant.execute)
-      .toHaveBeenCalledWith(fakeRequest.restaurantInput)
+      .toHaveBeenCalledWith({ ...fakeRequest.restaurantInput, accountId: fakeCreateAccountResolvedValue.id })
   })
 
   it('should return 200 on success', async () => {
     const response = await sut.handle(fakeRequest)
     expect(response)
-      .toEqual(ok({ accessToken: 'any_access_token', id: 'any_id' }))
+      .toEqual(ok({ accessToken: 'any_access_token' }))
   })
 
   it('should return 500 on error', async () => {

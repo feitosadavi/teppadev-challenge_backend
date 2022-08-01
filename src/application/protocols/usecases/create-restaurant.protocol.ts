@@ -5,6 +5,6 @@ export interface ICreateRestaurant {
 }
 
 export namespace ICreateRestaurant {
-  export type Input = Omit<Restaurant, 'id'>
+  export type Input = Omit<Restaurant, 'id'> & { accountId: string }
   export type Output = void
 }
