@@ -5,7 +5,7 @@ import { LoginController } from '@/application/controllers'
 import { setupApp } from '@/main/config'
 import { getFirestore } from 'firebase-admin/firestore'
 
-import FS_KEY from '@/../fs-key'
+import FS_KEY from '@/main/config/fs-key'
 import { initializeApp, cert } from 'firebase-admin/app'
 import { hash } from 'bcrypt'
 
@@ -28,7 +28,7 @@ describe('LoginRoutes', () => {
     await clearAccountsDatabase()
   })
 
-  describe('POST /signup', () => {
+  describe('POST /login', () => {
     it('should return 200 on success', async () => {
       const accountsColection = getFirestore().collection('accounts')
 
