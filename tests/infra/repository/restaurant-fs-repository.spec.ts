@@ -26,8 +26,8 @@ describe('RestaurantFsRepository', () => {
 
     afterEach(async () => {
       // Clear database
-      const restaurantsCollection = db.collection('restaurants')
-      const querySnapshot = await restaurantsCollection.get()
+      const accountsCollection = db.collection('restaurants')
+      const querySnapshot = await accountsCollection.get()
       querySnapshot.forEach(doc => doc.ref.delete())
     })
 
@@ -37,6 +37,23 @@ describe('RestaurantFsRepository', () => {
       })
       const restaurant = await db.collection('restaurants').where('name', '==', 'any_name').get()
       expect(restaurant.docs[0].data()).toEqual({ name: 'any_name' })
+    })
+  })
+
+  describe('UpdateAccountRepository', () => {
+    afterEach(async () => {
+      // Clear database
+      const accountsCollection = db.collection('restaurants')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
+    })
+
+    it('should update account on success', async () => {
+      let name = 'any_name'
+      const restaurantId = (await db.collection('restaurants').add({ name })).id
+      await sut.update({ data: { name: 'other_name' }, restaurantId })
+      const updatedRestaurant = (await db.collection('restaurants').doc(restaurantId).get()).data()
+      expect(updatedRestaurant.name).toBe('other_name')
     })
   })
 })
