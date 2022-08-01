@@ -1,7 +1,7 @@
 import { initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { AccountFsRepository } from '@/infra/repository'
-import FS_KEY from '@/../fs-key'
+import FS_KEY from '@/main/config/fs-key'
 
 
 jest.mock('jsonwebtoken')
