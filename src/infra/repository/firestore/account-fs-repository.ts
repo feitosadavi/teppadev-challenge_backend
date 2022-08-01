@@ -1,8 +1,13 @@
-import { ICreateAccountRepository, ILoadAccountByEmailRepository, IUpdateAccountRepository } from '@/application/protocols';
+import { ICreateAccountRepository, ILoadAccountByEmailRepository, ILoadAccountByTokenRepository, IUpdateAccountRepository } from '@/application/protocols';
 import { Account } from '@/domain/entities';
 import { getFirestore } from 'firebase-admin/firestore'
 
-export class AccountFsRepository implements ICreateAccountRepository, ILoadAccountByEmailRepository, IUpdateAccountRepository {
+export class AccountFsRepository implements
+  ICreateAccountRepository,
+  ILoadAccountByEmailRepository,
+  ILoadAccountByTokenRepository,
+  IUpdateAccountRepository {
+
   private readonly accountsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
 
   constructor() {
@@ -16,6 +21,14 @@ export class AccountFsRepository implements ICreateAccountRepository, ILoadAccou
 
   async loadByEmail ({ email }: ILoadAccountByEmailRepository.Input): Promise<ILoadAccountByEmailRepository.Output> {
     const docs = (await this.accountsCollection.where('email', '==', email).get()).docs[0]
+    return docs ? {
+      id: docs?.id,
+      ...docs.data() as Omit<Account, 'id'>
+    } : null
+  }
+
+  async loadByToken ({ accessToken }: ILoadAccountByTokenRepository.Input): Promise<Account> {
+    const docs = (await this.accountsCollection.where('email', '==', accessToken).get()).docs[0]
     return docs ? {
       id: docs?.id,
       ...docs.data() as Omit<Account, 'id'>
