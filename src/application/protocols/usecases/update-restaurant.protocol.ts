@@ -6,7 +6,7 @@ export interface IUpdateRestaurant {
 
 export namespace IUpdateRestaurant {
   export type Input = {
-    accountId: string
+    restaurantId: string,
     data: Partial<Omit<Restaurant, 'id'>>
   }
   export type Output = void

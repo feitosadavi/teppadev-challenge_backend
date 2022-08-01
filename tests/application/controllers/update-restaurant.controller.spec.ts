@@ -9,7 +9,7 @@ import { UpdateRestaurantController } from '@/application/controllers'
 import { badRequest, noContent, serverError } from '@/application/controllers/helpers'
 
 const makeFakeRequest = (): UpdateRestaurantController.Request => ({
-  accountId: 'any_id',
+  restaurantId: 'any_id',
   data: {
     name: 'other_name'
   }
@@ -39,7 +39,7 @@ describe('UpdateRestaurantController', () => {
 
   it('should call validator with correct input', async () => {
     await sut.handle(fakeRequest)
-    const { accountId, ...fieldsToUpdate } = fakeRequest
+    const { restaurantId, ...fieldsToUpdate } = fakeRequest
     expect(fakeValidator.validate)
       .toHaveBeenCalledWith(fieldsToUpdate)
   })

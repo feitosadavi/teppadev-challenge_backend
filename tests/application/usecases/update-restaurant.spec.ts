@@ -7,7 +7,7 @@ import {
 } from '@/application/protocols'
 
 const makeFakeUpdateRestaurantInput = (): IUpdateRestaurant.Input => ({
-  accountId: 'any_id',
+  restaurantId: 'any_id',
   data: {
     name: 'other_name'
   }

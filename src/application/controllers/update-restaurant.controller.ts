@@ -15,7 +15,7 @@ export class UpdateRestaurantController implements Controller<UpdateRestaurantCo
 
   async handle (req: UpdateRestaurantController.Request): Promise<HttpResponse<UpdateRestaurantController.Reponse>> {
     try {
-      const { accountId, ...fieldsToValidate } = req
+      const { restaurantId, ...fieldsToValidate } = req
       const error = this.validator.validate(fieldsToValidate)
       if (error) return badRequest(error)
 
@@ -31,7 +31,7 @@ export class UpdateRestaurantController implements Controller<UpdateRestaurantCo
 
 export namespace UpdateRestaurantController {
   export type Request = {
-    accountId: string,
+    restaurantId: string,
     data: Partial<Omit<Restaurant, 'id' | 'password'>>
   }
   export type Reponse = {}
