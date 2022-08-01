@@ -9,11 +9,11 @@ export namespace ICreateRestaurantRepository {
   export type Output = void
 }
 
-export interface IUpdatedRestaurantRepository {
-  update (input: IUpdatedRestaurantRepository.Input): Promise<IUpdatedRestaurantRepository.Output>
+export interface IUpdateRestaurantRepository {
+  update (input: IUpdateRestaurantRepository.Input): Promise<IUpdateRestaurantRepository.Output>
 }
 
-export namespace IUpdatedRestaurantRepository {
+export namespace IUpdateRestaurantRepository {
   export type Input = {
     accountId: string
     data: Partial<Omit<Restaurant, 'id'>>
