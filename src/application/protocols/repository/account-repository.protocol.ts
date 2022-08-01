@@ -18,6 +18,15 @@ export namespace ILoadAccountByEmailRepository {
   export type Output = Account | null
 }
 
+export interface ILoadAccountByTokenRepository {
+  loadByToken (input: ILoadAccountByTokenRepository.Input): Promise<ILoadAccountByTokenRepository.Output>
+}
+
+export namespace ILoadAccountByTokenRepository {
+  export type Input = { accessToken: string }
+  export type Output = Account | null
+}
+
 export interface IUpdateAccountRepository {
   update (input: IUpdateAccountRepository.Input): Promise<IUpdateAccountRepository.Output>
 }
