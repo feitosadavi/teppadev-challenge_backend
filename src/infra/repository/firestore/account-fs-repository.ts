@@ -28,7 +28,7 @@ export class AccountFsRepository implements
   }
 
   async loadByToken ({ accessToken }: ILoadAccountByTokenRepository.Input): Promise<Account> {
-    const docs = (await this.accountsCollection.where('email', '==', accessToken).get()).docs[0]
+    const docs = (await this.accountsCollection.where('accessToken', '==', accessToken).get()).docs[0]
     return docs ? {
       id: docs?.id,
       ...docs.data() as Omit<Account, 'id'>
