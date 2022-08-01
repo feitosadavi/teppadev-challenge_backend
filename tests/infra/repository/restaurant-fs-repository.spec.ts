@@ -3,6 +3,7 @@ import { initializeApp, cert } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { RestaurantFsRepository } from '@/infra/repository'
 import FS_KEY from '@/main/config/fs-key'
+import { ICreateRestaurantRepository } from '@/application/protocols'
 
 
 describe('RestaurantFsRepository', () => {
@@ -32,11 +33,13 @@ describe('RestaurantFsRepository', () => {
     })
 
     it('should add a restaurant', async () => {
-      await sut.create({
-        name: 'any_name'
-      })
+      const input: ICreateRestaurantRepository.Input = {
+        name: 'any_name',
+        accountId: 'any_account_id'
+      }
+      await sut.create(input)
       const restaurant = await db.collection('restaurants').where('name', '==', 'any_name').get()
-      expect(restaurant.docs[0].data()).toEqual({ name: 'any_name' })
+      expect(restaurant.docs[0].data()).toEqual(input)
     })
   })
 
