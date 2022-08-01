@@ -22,5 +22,5 @@ const makeLoginController = () => {
 }
 
 export default (router: Router): void => {
-  router.post('/login', adaptRoute(makeLoginController()))
+  router.get('/login', adaptRoute(makeLoginController()))
 }
