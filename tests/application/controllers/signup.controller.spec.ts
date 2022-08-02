@@ -8,7 +8,7 @@ import {
   ILoadAccountByEmail
 } from '@/application/protocols'
 import { SignupController } from '@/application/controllers'
-import { EmailInUseError } from '@/application/controllers/errors'
+import { EmailInUseError } from '@/application/errors'
 import { badRequest, ok, serverError } from '@/application/controllers/helpers'
 
 const makeFakeRequest = (): SignupController.Request => ({

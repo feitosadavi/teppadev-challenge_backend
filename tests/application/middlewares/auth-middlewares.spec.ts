@@ -6,7 +6,7 @@ import {
 } from '@/application/protocols'
 import { AuthMiddleware } from '@/application/middlewares'
 import { forbidden, ok } from '@/application/controllers/helpers'
-import { AccessDeniedError } from '@/application/controllers/errors'
+import { AccessDeniedError } from '@/application/errors'
 
 
 const makeFakeRequest = (): AuthMiddleware.Request => ({

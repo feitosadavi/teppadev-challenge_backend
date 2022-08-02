@@ -6,7 +6,7 @@ import {
   IUpdateRestaurant,
 } from '@/application/protocols'
 import { Restaurant } from '@/domain/entities'
-import { RestaurantDoesntBelongsToAccountError } from './errors'
+import { RestaurantDoesntBelongsToAccountError } from '../errors'
 import { badRequest, noContent, serverError, forbidden } from './helpers/http.helper'
 
 export class UpdateRestaurantController implements Controller<UpdateRestaurantController.Request, UpdateRestaurantController.Reponse> {

@@ -1,7 +1,7 @@
 import { ok } from '@/application/controllers/helpers'
 import { HttpResponse, ILoadAccountByToken, IMiddleware } from '@/application/protocols'
 import { serverError, forbidden } from '@/application/controllers/helpers'
-import { AccessDeniedError } from '@/application/controllers/errors'
+import { AccessDeniedError } from '@/application/errors'
 
 export class AuthMiddleware implements IMiddleware {
   constructor(

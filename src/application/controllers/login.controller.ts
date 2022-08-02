@@ -5,7 +5,7 @@ import {
   ILoadAccountByEmail,
   IAuthenticator
 } from '@/application/protocols'
-import { EmailNotFound, IncorrectPasswordError } from './errors'
+import { EmailNotFound, IncorrectPasswordError } from '../errors'
 import { badRequest, ok, serverError } from './helpers/http.helper'
 
 export class LoginController implements Controller<LoginController.Request, LoginController.Reponse> {
