@@ -1,4 +1,4 @@
-import { ICreateAccountRepository, ILoadAccountByEmailRepository, ILoadAccountByTokenRepository, IUpdateAccountRepository } from '@/application/protocols';
+import { ICreateAccountRepository, IDeleteAccountRepository, ILoadAccountByEmailRepository, ILoadAccountByTokenRepository, IUpdateAccountRepository } from '@/application/protocols';
 import { Account } from '@/domain/entities';
 import { getFirestore } from 'firebase-admin/firestore'
 
@@ -6,7 +6,8 @@ export class AccountFsRepository implements
   ICreateAccountRepository,
   ILoadAccountByEmailRepository,
   ILoadAccountByTokenRepository,
-  IUpdateAccountRepository {
+  IUpdateAccountRepository,
+  IDeleteAccountRepository {
 
   private readonly accountsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
 
@@ -37,5 +38,9 @@ export class AccountFsRepository implements
 
   async update ({ accountId, data }: IUpdateAccountRepository.Input): Promise<IUpdateAccountRepository.Output> {
     await this.accountsCollection.doc(accountId).update(data)
+  }
+
+  async delete ({ accountId }: IDeleteAccountRepository.Input): Promise<void> {
+    await this.accountsCollection.doc(accountId).delete()
   }
 }
