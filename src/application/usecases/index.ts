@@ -1,8 +1,6 @@
-export * from './create-account'
-export * from './create-restaurant'
-export * from './load-account-by-email'
-export * from './load-account-by-token'
-export * from './load-restaurant-by-id'
+export * from './account/create-account'
+export * from './restaurant/create-restaurant'
 export * from './authenticator'
-export * from './update-account'
-export * from './update-restaurant'
+
+export * from './account'
+export * from './restaurant'
