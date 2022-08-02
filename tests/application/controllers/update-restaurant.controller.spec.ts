@@ -6,13 +6,22 @@ import {
   ILoadRestaurantById
 } from '@/application/protocols'
 import { UpdateRestaurantController } from '@/application/controllers'
-import { badRequest, noContent, serverError } from '@/application/controllers/helpers'
+import { badRequest, noContent, serverError, forbidden } from '@/application/controllers/helpers'
+import { Restaurant } from '@/domain/entities'
+import { RestaurantDoesntBelongsToAccountError } from '@/application/controllers/errors'
 
 const makeFakeRequest = (): UpdateRestaurantController.Request => ({
   restaurantId: 'any_id',
+  accountId: 'any_account_id',
   data: {
     name: 'other_name'
   }
+})
+
+const makeFakeRestaurant = (): Restaurant => ({
+  id: 'any_id',
+  name: 'any_name',
+  accountId: 'any_account_id'
 })
 
 describe('UpdateRestaurantController', () => {
@@ -28,6 +37,7 @@ describe('UpdateRestaurantController', () => {
     fakeValidator = mock()
 
     fakeLoadRestaurantById = mock()
+    fakeLoadRestaurantById.execute.mockReturnValue(Promise.resolve(makeFakeRestaurant()))
 
     fakeUpdateRestaurant = mock()
 
@@ -43,9 +53,9 @@ describe('UpdateRestaurantController', () => {
 
   it('should call validator with correct input', async () => {
     await sut.handle(fakeRequest)
-    const { restaurantId, ...fieldsToUpdate } = fakeRequest
+    const { restaurantId, accountId, ...data } = fakeRequest
     expect(fakeValidator.validate)
-      .toHaveBeenCalledWith(fieldsToUpdate)
+      .toHaveBeenCalledWith(data)
   })
 
   it('should return 400 if validator returns an error', async () => {
@@ -62,10 +72,18 @@ describe('UpdateRestaurantController', () => {
     expect(fakeLoadRestaurantById.execute).toHaveBeenCalledWith({ id: restaurantId })
   })
 
+  it('should return 403 if logged accountId isnt equal to restaurant accountId', async () => {
+    fakeLoadRestaurantById.execute
+      .mockReturnValueOnce(Promise.resolve({ ...makeFakeRestaurant(), accountId: 'other_account_id' }))
+    const response = await sut.handle(fakeRequest)
+
+    expect(response).toEqual(forbidden(new RestaurantDoesntBelongsToAccountError()))
+  })
+
   it('should call updateAccount with correct input', async () => {
     await sut.handle(fakeRequest)
-    console.log(fakeRequest)
-    expect(fakeUpdateRestaurant.execute).toHaveBeenCalledWith(fakeRequest)
+    const { accountId, ...input } = fakeRequest
+    expect(fakeUpdateRestaurant.execute).toHaveBeenCalledWith(input)
   })
 
   it('should return 200 on success', async () => {
