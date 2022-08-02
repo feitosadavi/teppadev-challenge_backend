@@ -4,7 +4,8 @@ import {
   IDeleteRestaurant,
   ILoadRestaurantById,
 } from '@/application/protocols'
-import { noContent, serverError } from '@/application/helpers'
+import { forbidden, noContent, serverError } from '@/application/helpers'
+import { RestaurantDoesntBelongsToAccountError } from '@/application/errors'
 
 export class DeleteRestaurantController implements Controller<DeleteRestaurantController.Request, DeleteRestaurantController.Reponse> {
   constructor(
@@ -15,7 +16,8 @@ export class DeleteRestaurantController implements Controller<DeleteRestaurantCo
   async handle (req: DeleteRestaurantController.Request): Promise<HttpResponse<DeleteRestaurantController.Reponse>> {
     try {
       const { accountId, restaurantId } = req
-      await this.loadRestaurantById.execute({ id: restaurantId })
+      const restaurant = await this.loadRestaurantById.execute({ id: restaurantId })
+      if (restaurant.accountId !== accountId) return forbidden(new RestaurantDoesntBelongsToAccountError())
       await this.deleteRestaurant.execute({ restaurantId })
       return noContent()
 
