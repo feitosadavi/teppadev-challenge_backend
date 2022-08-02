@@ -1,8 +1,13 @@
-import { ICreateRestaurantRepository, ILoadRestaurantByIdRepository, IUpdateRestaurantRepository } from '@/application/protocols';
+import {
+  ICreateRestaurantRepository,
+  ILoadRestaurantByIdRepository,
+  IUpdateRestaurantRepository,
+  IDeleteRestaurantRepository
+} from '@/application/protocols';
 import { Restaurant } from '@/domain/entities';
 import { getFirestore } from 'firebase-admin/firestore'
 
-export class RestaurantFsRepository implements ICreateRestaurantRepository, IUpdateRestaurantRepository, ILoadRestaurantByIdRepository {
+export class RestaurantFsRepository implements ICreateRestaurantRepository, ILoadRestaurantByIdRepository, IUpdateRestaurantRepository, IDeleteRestaurantRepository {
   private readonly restaurantsCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
 
   constructor() {
@@ -23,5 +28,9 @@ export class RestaurantFsRepository implements ICreateRestaurantRepository, IUpd
 
   async update ({ restaurantId, data }: IUpdateRestaurantRepository.Input): Promise<IUpdateRestaurantRepository.Output> {
     await this.restaurantsCollection.doc(restaurantId).update(data)
+  }
+
+  async delete ({ restaurantId }: IDeleteRestaurantRepository.Input): Promise<void> {
+    await this.restaurantsCollection.doc(restaurantId).delete()
   }
 }
