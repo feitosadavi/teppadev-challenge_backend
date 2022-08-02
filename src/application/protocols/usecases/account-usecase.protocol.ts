@@ -42,3 +42,14 @@ export namespace IUpdateAccount {
   }
   export type Output = void
 }
+
+export interface IDeleteAccount {
+  execute (input: IDeleteAccount.Input): Promise<IDeleteAccount.Output>
+}
+
+export namespace IDeleteAccount {
+  export type Input = {
+    accountId: string,
+  }
+  export type Output = void
+}
