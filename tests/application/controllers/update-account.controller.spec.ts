@@ -53,7 +53,6 @@ describe('UpdateAccountController', () => {
 
   it('should call updateAccount with correct input', async () => {
     await sut.handle(fakeRequest)
-    console.log(fakeRequest)
     expect(fakeUpdateAccount.execute).toHaveBeenCalledWith(fakeRequest)
   })
 

@@ -26,7 +26,6 @@ describe('DeleteAccountController', () => {
 
   it('should call deleteAccount with correct input', async () => {
     await sut.handle(fakeRequest)
-    console.log(fakeRequest)
     expect(fakeDeleteAccount.execute).toHaveBeenCalledWith(fakeRequest)
   })
 
