@@ -1,6 +1,5 @@
-import { ok } from '@/application/controllers/helpers'
 import { HttpResponse, ILoadAccountByToken, IMiddleware } from '@/application/protocols'
-import { serverError, forbidden } from '@/application/controllers/helpers'
+import { serverError, forbidden, ok } from '@/application/helpers'
 import { AccessDeniedError } from '@/application/errors'
 
 export class AuthMiddleware implements IMiddleware {

@@ -9,7 +9,7 @@ import {
 } from '@/application/protocols'
 import { SignupController } from '@/application/controllers'
 import { EmailInUseError } from '@/application/errors'
-import { badRequest, ok, serverError } from '@/application/controllers/helpers'
+import { badRequest, ok, serverError } from '@/application/helpers'
 
 const makeFakeRequest = (): SignupController.Request => ({
   accountInput: {

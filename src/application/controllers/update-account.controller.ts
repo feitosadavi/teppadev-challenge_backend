@@ -5,7 +5,7 @@ import {
   IUpdateAccount,
 } from '@/application/protocols'
 import { Account } from '@/domain/entities'
-import { badRequest, noContent, serverError } from './helpers/http.helper'
+import { badRequest, noContent, serverError } from '@/application/helpers'
 
 export class UpdateAccountController implements Controller<UpdateAccountController.Request, UpdateAccountController.Reponse> {
   constructor(

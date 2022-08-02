@@ -6,8 +6,8 @@ import {
   ICreateAccount,
   ICreateRestaurant
 } from '@/application/protocols'
-import { EmailInUseError } from '../errors'
-import { badRequest, ok, serverError } from './helpers/http.helper'
+import { EmailInUseError } from '@/application/errors'
+import { badRequest, ok, serverError } from '@/application/helpers'
 
 export class SignupController implements Controller<SignupController.Request, SignupController.Reponse> {
   constructor(

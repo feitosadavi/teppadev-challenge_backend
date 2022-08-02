@@ -6,7 +6,7 @@ import {
   IUpdateAccount,
 } from '@/application/protocols'
 import { UpdateAccountController } from '@/application/controllers'
-import { badRequest, noContent, serverError } from '@/application/controllers/helpers'
+import { badRequest, noContent, serverError } from '@/application/helpers'
 
 const makeFakeRequest = (): UpdateAccountController.Request => ({
   accountId: 'any_id',

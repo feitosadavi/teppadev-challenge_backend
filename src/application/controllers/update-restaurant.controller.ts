@@ -5,9 +5,8 @@ import {
   ILoadRestaurantById,
   IUpdateRestaurant,
 } from '@/application/protocols'
-import { Restaurant } from '@/domain/entities'
-import { RestaurantDoesntBelongsToAccountError } from '../errors'
-import { badRequest, noContent, serverError, forbidden } from './helpers/http.helper'
+import { RestaurantDoesntBelongsToAccountError } from '@/application/errors'
+import { badRequest, noContent, serverError, forbidden } from '@/application/helpers'
 
 export class UpdateRestaurantController implements Controller<UpdateRestaurantController.Request, UpdateRestaurantController.Reponse> {
   constructor(

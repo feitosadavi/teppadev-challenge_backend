@@ -5,7 +5,7 @@ import {
   ILoadAccountByToken,
 } from '@/application/protocols'
 import { AuthMiddleware } from '@/application/middlewares'
-import { forbidden, ok } from '@/application/controllers/helpers'
+import { forbidden, ok } from '@/application/helpers'
 import { AccessDeniedError } from '@/application/errors'
 
 

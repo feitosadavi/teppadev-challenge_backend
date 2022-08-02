@@ -6,7 +6,7 @@ import {
   ILoadRestaurantById
 } from '@/application/protocols'
 import { UpdateRestaurantController } from '@/application/controllers'
-import { badRequest, noContent, serverError, forbidden } from '@/application/controllers/helpers'
+import { badRequest, noContent, serverError, forbidden } from '@/application/helpers'
 import { Restaurant } from '@/domain/entities'
 import { RestaurantDoesntBelongsToAccountError } from '@/application/errors'
 

@@ -8,7 +8,7 @@ import {
 } from '@/application/protocols'
 import { LoginController } from '@/application/controllers'
 import { EmailNotFound, IncorrectPasswordError } from '@/application/errors'
-import { badRequest, serverError, ok } from '@/application/controllers/helpers'
+import { badRequest, serverError, ok } from '@/application/helpers'
 
 const makeFakeRequest = (): LoginController.Request => ({
   email: 'any@email.com',
