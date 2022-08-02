@@ -1,9 +1,9 @@
 import { MockProxy, mock } from 'jest-mock-extended'
 
-import { Account } from '@/domain/entities'
 import {
   IValidator,
   IUpdateRestaurant,
+  ILoadRestaurantById
 } from '@/application/protocols'
 import { UpdateRestaurantController } from '@/application/controllers'
 import { badRequest, noContent, serverError } from '@/application/controllers/helpers'
@@ -20,11 +20,14 @@ describe('UpdateRestaurantController', () => {
 
   let fakeValidator: MockProxy<IValidator>
   let fakeUpdateRestaurant: MockProxy<IUpdateRestaurant>
+  let fakeLoadRestaurantById: MockProxy<ILoadRestaurantById>
 
   let fakeRequest: UpdateRestaurantController.Request
 
   beforeAll(() => {
     fakeValidator = mock()
+
+    fakeLoadRestaurantById = mock()
 
     fakeUpdateRestaurant = mock()
 
@@ -33,7 +36,8 @@ describe('UpdateRestaurantController', () => {
   beforeEach(() => {
     sut = new UpdateRestaurantController(
       fakeValidator,
-      fakeUpdateRestaurant,
+      fakeLoadRestaurantById,
+      fakeUpdateRestaurant
     )
   })
 
@@ -49,6 +53,13 @@ describe('UpdateRestaurantController', () => {
     const response = await sut.handle(fakeRequest)
 
     expect(response).toEqual(badRequest(new Error('validation error')))
+  })
+
+  it('should call loadRestaurantById with correct input', async () => {
+    await sut.handle(fakeRequest)
+    const { restaurantId } = fakeRequest
+
+    expect(fakeLoadRestaurantById.execute).toHaveBeenCalledWith({ id: restaurantId })
   })
 
   it('should call updateAccount with correct input', async () => {
