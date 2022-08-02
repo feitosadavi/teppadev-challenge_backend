@@ -6,7 +6,8 @@ import {
   IUpdateRestaurant,
 } from '@/application/protocols'
 import { Restaurant } from '@/domain/entities'
-import { badRequest, noContent, serverError } from './helpers/http.helper'
+import { RestaurantDoesntBelongsToAccountError } from './errors'
+import { badRequest, noContent, serverError, forbidden } from './helpers/http.helper'
 
 export class UpdateRestaurantController implements Controller<UpdateRestaurantController.Request, UpdateRestaurantController.Reponse> {
   constructor(
@@ -17,12 +18,15 @@ export class UpdateRestaurantController implements Controller<UpdateRestaurantCo
 
   async handle (req: UpdateRestaurantController.Request): Promise<HttpResponse<UpdateRestaurantController.Reponse>> {
     try {
-      const { restaurantId, ...fieldsToValidate } = req
-      const error = this.validator.validate(fieldsToValidate)
+      const { restaurantId, accountId, ...data } = req
+      const error = this.validator.validate(data)
       if (error) return badRequest(error)
 
-      this.loadRestaurantById.execute({ id: restaurantId })
-      await this.updateRestaurant.execute(req)
+      const restaurant = await this.loadRestaurantById.execute({ id: restaurantId })
+
+      if (accountId !== restaurant.accountId) return forbidden(new RestaurantDoesntBelongsToAccountError())
+
+      await this.updateRestaurant.execute({ restaurantId, ...data })
 
       return noContent()
 
@@ -35,7 +39,8 @@ export class UpdateRestaurantController implements Controller<UpdateRestaurantCo
 export namespace UpdateRestaurantController {
   export type Request = {
     restaurantId: string,
-    data: Partial<Omit<Restaurant, 'id' | 'password'>>
+    accountId: string,
+    data: IUpdateRestaurant.Data
   }
   export type Reponse = {}
 }

@@ -41,3 +41,10 @@ export class AccessDeniedError extends Error {
   }
 }
 
+export class RestaurantDoesntBelongsToAccountError extends Error {
+  constructor() {
+    super('Este restaurante não pertence à conta logada')
+    this.name = 'RestaurantDoesntBelongsToAccountError'
+  }
+}
+
