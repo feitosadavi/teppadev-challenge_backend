@@ -43,6 +43,28 @@ describe('RestaurantFsRepository', () => {
     })
   })
 
+  describe('LoadAccountByEmailRepository', () => {
+    beforeEach(async () => {
+      const accountsCollection = db.collection('restaurants')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
+    })
+
+    it('should return null if account was not found', async () => {
+      const account = await sut.loadById({ id: 'nonexistentid' })
+      expect(account).toBeNull()
+    })
+    it('should load a account by its email', async () => {
+      let name = 'any_name'
+
+      const restaurantId = (await db.collection('restaurants').add({ name })).id
+
+      const account = await sut.loadById({ id: restaurantId })
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+    })
+  })
+
   describe('UpdateAccountRepository', () => {
     afterEach(async () => {
       // Clear database
