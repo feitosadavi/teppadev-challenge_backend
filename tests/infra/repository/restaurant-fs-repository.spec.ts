@@ -27,8 +27,8 @@ describe('RestaurantFsRepository', () => {
 
     afterEach(async () => {
       // Clear database
-      const accountsCollection = db.collection('restaurants')
-      const querySnapshot = await accountsCollection.get()
+      const restaurantCollection = db.collection('restaurants')
+      const querySnapshot = await restaurantCollection.get()
       querySnapshot.forEach(doc => doc.ref.delete())
     })
 
@@ -45,8 +45,8 @@ describe('RestaurantFsRepository', () => {
 
   describe('LoadAccountByEmailRepository', () => {
     beforeEach(async () => {
-      const accountsCollection = db.collection('restaurants')
-      const querySnapshot = await accountsCollection.get()
+      const restaurantCollection = db.collection('restaurants')
+      const querySnapshot = await restaurantCollection.get()
       querySnapshot.forEach(doc => doc.ref.delete())
     })
 
@@ -68,8 +68,8 @@ describe('RestaurantFsRepository', () => {
   describe('UpdateAccountRepository', () => {
     afterEach(async () => {
       // Clear database
-      const accountsCollection = db.collection('restaurants')
-      const querySnapshot = await accountsCollection.get()
+      const restaurantCollection = db.collection('restaurants')
+      const querySnapshot = await restaurantCollection.get()
       querySnapshot.forEach(doc => doc.ref.delete())
     })
 
@@ -79,6 +79,23 @@ describe('RestaurantFsRepository', () => {
       await sut.update({ data: { name: 'other_name' }, restaurantId })
       const updatedRestaurant = (await db.collection('restaurants').doc(restaurantId).get()).data()
       expect(updatedRestaurant.name).toBe('other_name')
+    })
+  })
+
+  describe('DeleteRestaurantRepository', () => {
+    beforeEach(async () => {
+      const restaurantCollection = db.collection('restaurants')
+      const querySnapshot = await restaurantCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
+    })
+
+    it('should delete restaurant on success', async () => {
+      const restaurantId = (await db.collection('restaurants').add({ name: 'any_name' })).id
+
+      await sut.delete({ restaurantId })
+
+      const deletedRestaurantId = (await db.collection('restaurants').doc(restaurantId).get()).data()
+      expect(deletedRestaurantId).toBeUndefined()
     })
   })
 })
