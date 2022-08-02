@@ -38,3 +38,14 @@ export namespace IUpdateAccountRepository {
   }
   export type Output = void
 }
+
+export interface IDeleteAccountRepository {
+  delete (input: IDeleteAccountRepository.Input): Promise<IDeleteAccountRepository.Output>
+}
+
+export namespace IDeleteAccountRepository {
+  export type Input = {
+    accountId: string,
+  }
+  export type Output = void
+}
