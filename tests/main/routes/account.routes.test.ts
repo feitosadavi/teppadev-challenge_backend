@@ -35,20 +35,17 @@ describe('SignupRoutes', () => {
   }
 
   beforeAll(() => {
+    app = setupApp()
     initializeApp({
       credential: cert(FS_KEY as any),
     }, `test-${Math.random()}`);
   })
 
-  beforeEach(async () => {
-    initializeApp({
-      credential: cert(FS_KEY as any),
-    }, `test-${Math.random()}`);
-    app = setupApp()
+  afterEach(async () => {
     await clearAccountsDatabase()
   })
-
   describe('PUT /accounts/update', () => {
+
     it('should return 200 on success', async () => {
       const accountId = await addAccount()
       const accessToken = sign(accountId, 'secret')
@@ -63,6 +60,22 @@ describe('SignupRoutes', () => {
         .put('/api/accounts/update')
         .set('x-access-token', accessToken)
         .send(params)
+
+      expect(status).toBe(204)
+      expect(body).toEqual({})
+    })
+  })
+
+  describe('DELETE /accounts/delete', () => {
+
+    it('should return 200 on success', async () => {
+      const accountId = await addAccount()
+      const accessToken = sign(accountId, 'secret')
+      updateAccessToken(accountId, accessToken)
+
+      const { status, body } = await request(app)
+        .delete('/api/accounts/delete')
+        .set('x-access-token', accessToken)
 
       expect(status).toBe(204)
       expect(body).toEqual({})
