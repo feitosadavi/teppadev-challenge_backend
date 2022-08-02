@@ -2,6 +2,7 @@ import {
   IValidator,
   Controller,
   HttpResponse,
+  ILoadRestaurantById,
   IUpdateRestaurant,
 } from '@/application/protocols'
 import { Restaurant } from '@/domain/entities'
@@ -10,6 +11,7 @@ import { badRequest, noContent, serverError } from './helpers/http.helper'
 export class UpdateRestaurantController implements Controller<UpdateRestaurantController.Request, UpdateRestaurantController.Reponse> {
   constructor(
     private readonly validator: IValidator,
+    private readonly loadRestaurantById: ILoadRestaurantById,
     private readonly updateRestaurant: IUpdateRestaurant,
   ) { }
 
@@ -19,6 +21,7 @@ export class UpdateRestaurantController implements Controller<UpdateRestaurantCo
       const error = this.validator.validate(fieldsToValidate)
       if (error) return badRequest(error)
 
+      this.loadRestaurantById.execute({ id: restaurantId })
       await this.updateRestaurant.execute(req)
 
       return noContent()
