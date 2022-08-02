@@ -9,12 +9,6 @@ describe('JWTAdapter', () => {
   let sut: AccountFsRepository
   let db: FirebaseFirestore.Firestore
 
-  const clearDatabase = async () => {
-    const accountsCollection = db.collection('accounts')
-    const querySnapshot = await accountsCollection.get()
-    querySnapshot.forEach(doc => doc.ref.delete())
-  }
-
   beforeAll(() => {
     initializeApp({
       credential: cert(FS_KEY as any)
@@ -25,7 +19,9 @@ describe('JWTAdapter', () => {
 
   describe('CreateAccountRepository', () => {
     beforeEach(async () => {
-      clearDatabase()
+      const accountsCollection = db.collection('accounts')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
     })
 
     it('should add a account and return its id', async () => {
@@ -39,7 +35,9 @@ describe('JWTAdapter', () => {
 
   describe('LoadAccountByEmailRepository', () => {
     beforeEach(async () => {
-      clearDatabase()
+      const accountsCollection = db.collection('accounts')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
     })
 
     it('should return null if account was not found', async () => {
@@ -60,7 +58,9 @@ describe('JWTAdapter', () => {
 
   describe('LoadAccountByEmailRepository', () => {
     beforeEach(async () => {
-      clearDatabase()
+      const accountsCollection = db.collection('accounts')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
     })
 
     it('should return null if account was not found', async () => {
@@ -82,7 +82,9 @@ describe('JWTAdapter', () => {
 
   describe('UpdateAccountRepository', () => {
     beforeEach(async () => {
-      clearDatabase()
+      const accountsCollection = db.collection('accounts')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
     })
 
     it('should update account on success', async () => {
@@ -101,6 +103,23 @@ describe('JWTAdapter', () => {
       await sut.update({ data: { accessToken: 'any_access_token' }, accountId })
       const updatedAccount = (await db.collection('accounts').doc(accountId).get()).data()
       expect(updatedAccount.accessToken).toBe('any_access_token')
+    })
+  })
+
+  describe('DeleteAccountRepository', () => {
+    beforeEach(async () => {
+      const accountsCollection = db.collection('accounts')
+      const querySnapshot = await accountsCollection.get()
+      querySnapshot.forEach(doc => doc.ref.delete())
+    })
+
+    it('should delete account on success', async () => {
+      let email = 'any@email.com'
+      let password = 'hashed_password'
+      const accountId = (await db.collection('accounts').add({ email, password })).id
+      await sut.delete({ accountId })
+      const deletedAccountId = (await db.collection('accounts').doc(accountId).get()).data()
+      expect(deletedAccountId).toBeUndefined()
     })
   })
 })
