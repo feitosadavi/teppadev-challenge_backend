@@ -5,7 +5,8 @@ import {
   loginParamsSchema,
   loginSuccessSchema,
   login400Schema,
-  updateAccountParamsSchema
+  updateAccountParamsSchema,
+  updateRestaurantParamsSchema
 } from './schemas/'
 
 export default {
@@ -18,4 +19,5 @@ export default {
   login400: login400Schema,
 
   updateAccountParams: updateAccountParamsSchema,
+  updateRestaurantParams: updateRestaurantParamsSchema,
 }

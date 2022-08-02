@@ -3,13 +3,15 @@ import {
   serverError,
   unauthorized,
   notFound,
-  forbidden
+  forbidden,
+  noContent
 } from './components/'
 
 export default {
   // securitySchemes: {
   //   apiKeyAuth: apiKeyAuthSchema
   // },
+  noContent,
   badRequest,
   serverError,
   unauthorized,

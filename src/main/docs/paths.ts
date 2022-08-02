@@ -1,11 +1,13 @@
 import {
   signUpPath,
   loginPath,
-  updateAccountPath
+  updateAccountPath,
+  updateRestaurantPath
 } from './paths/'
 
 export default {
   '/signup': signUpPath,
   '/login': loginPath,
   '/accounts/update': updateAccountPath,
+  '/restaurants/:restaurantId/update': updateRestaurantPath,
 }
