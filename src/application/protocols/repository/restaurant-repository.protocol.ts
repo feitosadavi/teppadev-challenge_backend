@@ -30,3 +30,14 @@ export namespace IUpdateRestaurantRepository {
   }
   export type Output = void
 }
+
+export interface IDeleteRestaurantRepository {
+  delete (input: IDeleteRestaurantRepository.Input): Promise<IDeleteRestaurantRepository.Output>
+}
+
+export namespace IDeleteRestaurantRepository {
+  export type Input = {
+    restaurantId: string,
+  }
+  export type Output = void
+}
