@@ -41,3 +41,13 @@ export namespace IDeleteRestaurantRepository {
   }
   export type Output = void
 }
+
+// Menu
+export interface ICreateMenuRepository {
+  execute (input: ICreateMenuRepository.Input): Promise<ICreateMenuRepository.Output>
+}
+
+export namespace ICreateMenuRepository {
+  export type Input = Restaurant.Menu
+  export type Output = void
+}

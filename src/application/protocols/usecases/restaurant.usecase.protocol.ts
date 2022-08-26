@@ -9,6 +9,16 @@ export namespace ICreateRestaurant {
   export type Output = void
 }
 
+export interface ICreateMenu {
+  execute (input: ICreateMenu.Input): Promise<ICreateMenu.Output>
+}
+
+export namespace ICreateMenu {
+  export type Input = Restaurant.Menu
+  export type Output = void
+}
+
+
 export interface ILoadRestaurantById {
   execute (input: ILoadRestaurantById.Input): Promise<ILoadRestaurantById.Output>
 }
