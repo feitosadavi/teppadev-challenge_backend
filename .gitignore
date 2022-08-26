@@ -3,3 +3,4 @@ package-lock.json
 coverage
 .env
 fs-key-local.ts
+data
